@@ -2,7 +2,6 @@ package com.example.myapplication.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -10,17 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
 fun MenuWindow(
-    drawerState: DrawerState,
-    scope: CoroutineScope,
-    showGrid: Boolean,
-    showGridChanger: (Boolean) -> Unit,
-    openDialog: (Boolean) -> Unit
-
+    closeDrawer: () -> Unit,
+    viewModel: UiViewModel
 ) {
     ConstraintLayout {
         val (button1, button2, button3) = createRefs()
@@ -37,9 +31,9 @@ fun MenuWindow(
 
                 },
             onClick = {
-                scope.launch { drawerState.close() }
+                viewModel.needOpenDialog()
 
-                openDialog.invoke(true)
+                closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,
@@ -57,8 +51,7 @@ fun MenuWindow(
                     top.linkTo(parent.top)
                 },
             onClick = {
-                scope.launch { drawerState.close() }
-
+                viewModel.needOpenDialog()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,
@@ -76,9 +69,9 @@ fun MenuWindow(
                     top.linkTo(parent.top)
                 },
             onClick = {
-                scope.launch { drawerState.close() }
+                viewModel.toggleShowGrid()
 
-                showGridChanger(!showGrid)
+                closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,

@@ -5,15 +5,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
 fun ImageCreatorDialog(
-    openDialog: (Boolean) -> Unit,
-    isFromGallery: (Boolean) -> Unit,
-    isFromInternet: (Boolean) -> Unit
+    viewModel: UiViewModel
 ) {
     AlertDialog(
-        onDismissRequest = { openDialog.invoke(false) },
+        onDismissRequest = { viewModel.needOpenDialog() },
         title = { Text(text = "Откуда вы хотите загрузить изображение?") },
         text = {
             Text(
@@ -27,9 +26,7 @@ fun ImageCreatorDialog(
         confirmButton = {
             Button(
                 {
-                    isFromInternet.invoke(true)
-
-                    openDialog.invoke(false)
+                    viewModel.imageFromInternet()
                 }
             ) {
                 Text("По ссылке", fontSize = 22.sp)
@@ -38,9 +35,7 @@ fun ImageCreatorDialog(
         dismissButton = {
             Button(
                 {
-                    isFromGallery.invoke(true)
-
-                    openDialog.invoke(false)
+                    viewModel.imageFromGallery()
                 }
             ) {
                 Text("Из галлереи", fontSize = 22.sp)
