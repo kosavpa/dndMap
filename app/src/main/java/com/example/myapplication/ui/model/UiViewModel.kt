@@ -2,6 +2,7 @@ package com.example.myapplication.ui.model
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
@@ -33,6 +34,13 @@ class UiViewModel : ViewModel() {
 
     val imageUri: Uri?
         get() = _imageUri
+
+
+    private var _scale by mutableFloatStateOf(1f)
+
+    var scale: Float
+        get() = _scale
+        set(scale) { _scale = scale }
 
     fun galleryUri(uri: Uri?) {
         _imageUri = uri
