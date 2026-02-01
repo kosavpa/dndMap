@@ -5,80 +5,69 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 class UiViewModel : ViewModel() {
+    var showGrid by mutableStateOf(false)
+        private set
 
-    private var _showGrid by mutableStateOf(false)
+    var isOpenImagePickerDialog by mutableStateOf(false)
+        private set
 
-    val showGrid: Boolean
-        get() = _showGrid
+    var isFromGallery by mutableStateOf(false)
+        private set
 
-    private var _isOpenImagePickerDialog by mutableStateOf(false)
+    var isFromInternet by mutableStateOf(false)
+        private set
 
-    val isOpenImagePickerDialog: Boolean
-        get() = _isOpenImagePickerDialog
+    var imageUri by mutableStateOf<Uri?>(null)
+        private set
 
-    private var _isFromGallery by mutableStateOf(false)
+    private val _startCellSize = 63f
 
-    val isFromGallery: Boolean
-        get() = _isFromGallery
+    private val _endCellSize = 189f
 
-    private var _isFromInternet by mutableStateOf(false)
+    val cellSizeRange = _startCellSize.._endCellSize
 
-    val isFromInternet: Boolean
-        get() = _isFromInternet
+    var cellSize by mutableFloatStateOf(_startCellSize)
 
-    private var _imageUri by mutableStateOf<Uri?>(null)
+    var canvasSize by mutableStateOf(Size.Zero)
 
-    val imageUri: Uri?
-        get() = _imageUri
+    var scale by mutableFloatStateOf(1f)
 
+    var offset by mutableStateOf(Offset.Zero)
 
-    private var _scale by mutableFloatStateOf(1f)
+    fun setUri(uri: Uri?) {
+        imageUri = uri
 
-    var scale: Float
-        get() = _scale
-        set(scale) { _scale = scale }
+        isFromGallery = false
 
-    fun galleryUri(uri: Uri?) {
-        _imageUri = uri
-
-        _isFromGallery = true
-
-        _isFromInternet = false
-    }
-
-    fun internetUri(uri: String) {
-        _imageUri = uri.takeIf { it.isNotBlank() }?.toUri()
-
-        _isFromInternet = true
-
-        _isFromGallery = false
+        isFromInternet = false
     }
 
     fun toggleShowGrid() {
-        _showGrid = !_showGrid
+        showGrid = !showGrid
     }
 
     fun needOpenDialog() {
-        _isOpenImagePickerDialog = true
+        isOpenImagePickerDialog = true
     }
 
     fun imageFromInternet() {
-        _isOpenImagePickerDialog = false
+        isOpenImagePickerDialog = false
 
-        _isFromGallery = false
+        isFromGallery = false
 
-        _isFromInternet = true
+        isFromInternet = true
     }
 
     fun imageFromGallery() {
-        _isOpenImagePickerDialog = false
+        isOpenImagePickerDialog = false
 
-        _isFromInternet = false
+        isFromInternet = false
 
-        _isFromGallery = true
+        isFromGallery = true
     }
 }

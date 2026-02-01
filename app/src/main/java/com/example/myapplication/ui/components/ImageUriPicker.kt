@@ -11,6 +11,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
@@ -19,7 +20,7 @@ fun ImageUriPicker(viewModel: UiViewModel) {
         val galleryLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri: Uri? ->
-                uri?.let { viewModel.galleryUri(uri) }
+                uri?.let { viewModel.setUri(uri) }
             }
         )
 
@@ -44,7 +45,7 @@ fun ImageUriPicker(viewModel: UiViewModel) {
             confirmButton = {
                 Button(
                     {
-                        viewModel.internetUri(tmpInternetUri)
+                        viewModel.setUri(tmpInternetUri.takeIf { it.isNotBlank() }?.toUri())
                     }
                 ) {
                     Text("Ok", fontSize = 22.sp)
