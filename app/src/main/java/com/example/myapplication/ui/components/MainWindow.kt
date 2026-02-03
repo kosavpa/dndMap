@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.components
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -32,76 +34,83 @@ fun MainWindow(
         ImageCreatorDialog(viewModel)
     }
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Red)
+    ) {
+        viewModel.imageUri?.let {
+            val painter = rememberAsyncImagePainter(
+                viewModel.imageUri,
+            )
 
-    viewModel.imageUri?.let {
-        val painter = rememberAsyncImagePainter(
-            viewModel.imageUri,
-        )
-
-        Box(Modifier.fillMaxSize()) {
-            Canvas(
-                Modifier
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectTransformGestures(
-                            true,
-                            { _, pan, _, _ ->
-                                viewModel.offset += pan
-                            }
-                        )
-                    }
-            ) {
-                viewModel.canvasSize = size
-
-                with(painter) {
-                    withTransform(
-                        {
-                            scale(scaleX = viewModel.scale, scaleY = viewModel.scale)
-                            translate(viewModel.offset.x, viewModel.offset.y)
+            Box(Modifier.fillMaxSize()) {
+                Canvas(
+                    Modifier
+                        .fillMaxSize()
+                        .pointerInput(Unit) {
+                            detectTransformGestures(
+                                true,
+                                { _, pan, _, _ ->
+                                    viewModel.offset += pan
+                                }
+                            )
                         }
-                    ) {
-                        draw(size * viewModel.scale)
+                ) {
+                    viewModel.canvasSize = size
 
-                        if (viewModel.showGrid) {
-                            drawVerticalLines(viewModel)
+                    with(painter) {
+                        withTransform(
+                            {
+                                scale(scaleX = viewModel.scale, scaleY = viewModel.scale)
+                                translate(viewModel.offset.x, viewModel.offset.y)
+                            }
+                        ) {
+                            draw(size)
 
-                            drawHorizontalLines(viewModel)
+                            if (viewModel.showGrid) {
+                                drawVerticalLines(viewModel)
+
+                                drawHorizontalLines(viewModel)
+                            }
                         }
                     }
                 }
-            }
 
-            Slider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                value = 1f,
-                onValueChange = { viewModel.scale = it },
-                steps = 100,
-                valueRange = 1f..2f
-            )
-
-            if (viewModel.showGrid) {
-                Slider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    value = viewModel.cellSize,
-                    onValueChange = { viewModel.cellSize = it },
-                    valueRange = viewModel.cellSizeRange
-                )
+                if (viewModel.showGrid) {
+                    Slider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        value = viewModel.cellSize,
+                        onValueChange = { viewModel.cellSize = it },
+                        valueRange = viewModel.cellSizeRange
+                    )
+                }
             }
         }
+
+        Slider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+                .align(Alignment.BottomCenter),
+            value = 1f,
+            onValueChange = { viewModel.scale = it },
+            steps = 100,
+            valueRange = 1f..2f
+        )
+
+        IconButton(
+            onClick = {
+                openDrawer.invoke()
+            },
+            content = {
+                Icon(Icons.Filled.Menu, "")
+            }
+        )
+
     }
-
-    IconButton(
-        onClick = {
-            openDrawer.invoke()
-        },
-        content = {
-            Icon(Icons.Filled.Menu, "")
-        }
-    )
 }
 
 private fun DrawScope.drawVerticalLines(viewModel: UiViewModel) {
