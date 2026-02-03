@@ -95,10 +95,10 @@ fun MainWindow(
                 .fillMaxWidth()
                 .padding(32.dp)
                 .align(Alignment.BottomCenter),
-            value = 1f,
+            value = viewModel.scale,
             onValueChange = { viewModel.scale = it },
             steps = 100,
-            valueRange = 1f..2f
+            valueRange = 1f..4f
         )
 
         IconButton(
