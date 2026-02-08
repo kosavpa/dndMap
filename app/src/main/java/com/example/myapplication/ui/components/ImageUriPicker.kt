@@ -33,7 +33,7 @@ fun ImageUriPicker(viewModel: UiViewModel) {
         var tmpInternetUri by remember { mutableStateOf("") }
 
         AlertDialog(
-            onDismissRequest = { },
+            onDismissRequest = { viewModel.cancelPickImage() },
             title = { Text(text = "Введите ссылку на изображение") },
             text = {
                 TextField(

@@ -1,14 +1,14 @@
 package com.example.myapplication.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
@@ -50,11 +50,10 @@ fun MainWindow(
                         .fillMaxSize()
                         .pointerInput(Unit) {
                             detectTransformGestures(
-                                true,
-                                { _, pan, _, _ ->
-                                    viewModel.offset += pan
-                                }
-                            )
+                                true
+                            ) { _, pan, _, _ ->
+                                viewModel.offset += pan
+                            }
                         }
                 ) {
                     viewModel.canvasSize = size
@@ -77,29 +76,62 @@ fun MainWindow(
                     }
                 }
 
-                if (viewModel.showGrid) {
-                    Slider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        value = viewModel.cellSize,
-                        onValueChange = { viewModel.cellSize = it },
-                        valueRange = viewModel.cellSizeRange
+                AnimatedVisibility(
+                    viewModel.boxSizeControllerIsVisible(),
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                ) {
+                    Column(Modifier.align(Alignment.BottomEnd)) {
+                        if (viewModel.scaleControllerBoxIsVisible) {
+                            Slider(
+                                modifier = Modifier
+                                    .padding(64.dp, 0.dp)
+                                    .fillMaxWidth(),
+                                value = viewModel.scale,
+                                onValueChange = { viewModel.scale = it },
+                                steps = 100,
+                                valueRange = 1f..4f
+                            )
+                        }
+
+                        if (viewModel.gridSizeControllerBoxIsVisible && viewModel.showGrid) {
+                            Slider(
+                                modifier = Modifier
+                                    .padding(64.dp, 0.dp)
+                                    .fillMaxWidth(),
+                                value = viewModel.cellSize,
+                                onValueChange = { viewModel.cellSize = it },
+                                valueRange = viewModel.cellSizeRange
+                            )
+                        }
+                    }
+                }
+
+                Column(Modifier.align(Alignment.BottomStart)) {
+                    IconButton(
+                        modifier = Modifier.align(Alignment.Start),
+                        onClick = {
+                            viewModel.scaleControllerBoxIsVisible =
+                                !viewModel.scaleControllerBoxIsVisible
+                        },
+                        content = {
+                            Icon(Icons.Filled.Search, "")
+                        }
+                    )
+
+                    IconButton(
+                        modifier = Modifier.align(Alignment.Start),
+                        onClick = {
+                            viewModel.gridSizeControllerBoxIsVisible =
+                                !viewModel.gridSizeControllerBoxIsVisible
+                        },
+                        content = {
+                            Icon(Icons.Filled.Add, "")
+                        }
                     )
                 }
             }
         }
-
-        Slider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-                .align(Alignment.BottomCenter),
-            value = viewModel.scale,
-            onValueChange = { viewModel.scale = it },
-            steps = 100,
-            valueRange = 1f..4f
-        )
 
         IconButton(
             onClick = {

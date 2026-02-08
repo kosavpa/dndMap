@@ -10,6 +10,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 class UiViewModel : ViewModel() {
+    var scaleControllerBoxIsVisible  by mutableStateOf(false)
+
+    var gridSizeControllerBoxIsVisible  by mutableStateOf(false)
+
     var showGrid by mutableStateOf(false)
         private set
 
@@ -52,7 +56,15 @@ class UiViewModel : ViewModel() {
     }
 
     fun needOpenDialog() {
-        isOpenImagePickerDialog = true
+        isOpenImagePickerDialog = !isOpenImagePickerDialog
+    }
+
+    fun cancelPickImage() {
+        isOpenImagePickerDialog = false
+
+        isFromGallery = false
+
+        isFromInternet = false
     }
 
     fun imageFromInternet() {
@@ -69,5 +81,9 @@ class UiViewModel : ViewModel() {
         isFromInternet = false
 
         isFromGallery = true
+    }
+
+    fun boxSizeControllerIsVisible(): Boolean {
+        return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 }
