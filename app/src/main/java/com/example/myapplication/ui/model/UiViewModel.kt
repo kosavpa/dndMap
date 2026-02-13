@@ -43,6 +43,9 @@ class UiViewModel : ViewModel() {
 
     var offset by mutableStateOf(Offset.Zero)
 
+    var isNeedOpenChipCreationScreen by mutableStateOf(false)
+        private set
+
     fun setUri(uri: Uri?) {
         imageUri = uri
 
@@ -55,7 +58,7 @@ class UiViewModel : ViewModel() {
         showGrid = !showGrid
     }
 
-    fun needOpenDialog() {
+    fun toggleNeedOpenImageDialog() {
         isOpenImagePickerDialog = !isOpenImagePickerDialog
     }
 
@@ -85,5 +88,9 @@ class UiViewModel : ViewModel() {
 
     fun boxSizeControllerIsVisible(): Boolean {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
+    }
+
+    fun toggleCreateChip() {
+        isNeedOpenChipCreationScreen = !isNeedOpenChipCreationScreen
     }
 }

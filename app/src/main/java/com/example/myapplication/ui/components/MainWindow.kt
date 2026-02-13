@@ -30,6 +30,10 @@ fun MainWindow(
             ImageDrawer(viewModel)
         }
 
+        if (viewModel.isNeedOpenChipCreationScreen) {
+
+        }
+
         IconButton(
             onClick = {
                 openDrawer.invoke()

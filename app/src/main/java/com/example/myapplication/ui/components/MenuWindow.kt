@@ -31,7 +31,7 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.needOpenDialog()
+                viewModel.toggleNeedOpenImageDialog()
 
                 closeDrawer.invoke()
             },
@@ -51,14 +51,14 @@ fun MenuWindow(
                     top.linkTo(parent.top)
                 },
             onClick = {
-                viewModel.needOpenDialog()
+                viewModel.toggleCreateChip()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,
                 containerColor = Color.Transparent
             )
         ) {
-            Text("Добавить фишку", fontSize = 22.sp)
+            Text("Создать фишку", fontSize = 22.sp)
         }
         TextButton(
             modifier = Modifier

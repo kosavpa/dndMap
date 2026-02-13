@@ -12,7 +12,7 @@ fun ImageCreatorDialog(
     viewModel: UiViewModel
 ) {
     AlertDialog(
-        onDismissRequest = { viewModel.needOpenDialog() },
+        onDismissRequest = { viewModel.toggleNeedOpenImageDialog() },
         title = { Text(text = "Откуда вы хотите загрузить изображение?") },
         text = {
             Text(
