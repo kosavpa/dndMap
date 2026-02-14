@@ -10,6 +10,9 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 class UiViewModel : ViewModel() {
+    var chipUri by mutableStateOf<Uri?>(null)
+
+    var isLoadChipUriFromGallary by mutableStateOf(false)
     var scaleControllerBoxIsVisible  by mutableStateOf(false)
 
     var gridSizeControllerBoxIsVisible  by mutableStateOf(false)

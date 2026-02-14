@@ -28,7 +28,7 @@ fun ImageDrawer(viewModel: UiViewModel) {
     checkNotNull(viewModel.imageUri, {"Image uri is required!"})
 
     val painter = rememberAsyncImagePainter(
-        viewModel.imageUri,
+        viewModel.imageUri
     )
 
     Box(Modifier.fillMaxSize()) {

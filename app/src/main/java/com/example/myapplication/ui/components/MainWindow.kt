@@ -31,7 +31,7 @@ fun MainWindow(
         }
 
         if (viewModel.isNeedOpenChipCreationScreen) {
-
+            ChipCreateDialog(viewModel)
         }
 
         IconButton(
