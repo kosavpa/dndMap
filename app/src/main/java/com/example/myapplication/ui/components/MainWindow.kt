@@ -26,12 +26,12 @@ fun MainWindow(
             .fillMaxSize()
             .background(Color.Red)
     ) {
-        viewModel.imageUri?.let {
-            ImageDrawer(viewModel)
-        }
-
         if (viewModel.isNeedOpenChipCreationScreen) {
             ChipCreateDialog(viewModel)
+        } else {
+            viewModel.imageUri?.let {
+                ImageDrawer(viewModel)
+            }
         }
 
         IconButton(

@@ -10,9 +10,15 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 class UiViewModel : ViewModel() {
-    var chipUri by mutableStateOf<Uri?>(null)
+    var isLoadChipUriFromUri by mutableStateOf(false)
+        private set
 
-    var isLoadChipUriFromGallary by mutableStateOf(false)
+    var chipUri by mutableStateOf<Uri?>(null)
+        private set
+
+    var isLoadChipUriFromGallery by mutableStateOf(false)
+        private set
+
     var scaleControllerBoxIsVisible  by mutableStateOf(false)
 
     var gridSizeControllerBoxIsVisible  by mutableStateOf(false)
@@ -57,6 +63,14 @@ class UiViewModel : ViewModel() {
         isFromInternet = false
     }
 
+    fun setUriChip(uri: Uri?) {
+        chipUri = uri
+
+        isLoadChipUriFromUri = false
+
+        isLoadChipUriFromGallery = false
+    }
+
     fun toggleShowGrid() {
         showGrid = !showGrid
     }
@@ -89,11 +103,25 @@ class UiViewModel : ViewModel() {
         isFromGallery = true
     }
 
+    fun imageChipFromInternet() {
+        isLoadChipUriFromGallery = false
+
+        isLoadChipUriFromUri = true
+    }
+
+    fun imageChipFromGallery() {
+        isLoadChipUriFromUri = false
+
+        isLoadChipUriFromGallery = true
+    }
+
     fun boxSizeControllerIsVisible(): Boolean {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 
     fun toggleCreateChip() {
         isNeedOpenChipCreationScreen = !isNeedOpenChipCreationScreen
+
+        setUriChip(null)
     }
 }
