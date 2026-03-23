@@ -31,7 +31,7 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.toggleNeedOpenImageDialog()
+                viewModel.toggleCreateMap()
 
                 closeDrawer.invoke()
             },
@@ -40,8 +40,9 @@ fun MenuWindow(
                 containerColor = Color.Transparent
             )
         ) {
-            Text("Добавить фон", fontSize = 22.sp)
+            Text("Создать карту", fontSize = 22.sp)
         }
+
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -60,6 +61,7 @@ fun MenuWindow(
         ) {
             Text("Создать фишку", fontSize = 22.sp)
         }
+
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()

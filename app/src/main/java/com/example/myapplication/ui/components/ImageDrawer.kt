@@ -25,10 +25,10 @@ import kotlin.math.floor
 
 @Composable
 fun ImageDrawer(viewModel: UiViewModel) {
-    checkNotNull(viewModel.imageUri, {"Image uri is required!"})
+    checkNotNull(viewModel.selectedMapUri, {"Image uri is required!"})
 
     val painter = rememberAsyncImagePainter(
-        viewModel.imageUri
+        viewModel.selectedMapUri
     )
 
     Box(Modifier.fillMaxSize()) {

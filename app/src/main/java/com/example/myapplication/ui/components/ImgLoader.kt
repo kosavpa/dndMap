@@ -10,23 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
-fun ImageUriPicker(viewModel: UiViewModel) {
+fun ImgLoader(viewModel: UiViewModel, imgType: ImageType) {
     if (viewModel.isFromGallery) {
-        val current = LocalContext.current
-
         val galleryLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri: Uri? ->
                 uri?.let {
-                    viewModel.setUri(uri)
-
-                    save(viewModel, current)
+                    handleUri(viewModel, uri, imgType)
                 }
             }
         )
@@ -40,7 +36,7 @@ fun ImageUriPicker(viewModel: UiViewModel) {
         var tmpInternetUri by remember { mutableStateOf("") }
 
         AlertDialog(
-            onDismissRequest = { viewModel.cancelPickImage() },
+            onDismissRequest = { viewModel.cancelResolveOrPickImage() },
             title = { Text(text = "Введите ссылку на изображение") },
             text = {
                 TextField(
@@ -52,13 +48,18 @@ fun ImageUriPicker(viewModel: UiViewModel) {
             confirmButton = {
                 Button(
                     {
-                        viewModel.setUri(tmpInternetUri.takeIf { it.isNotBlank() }?.toUri())
+                        if (tmpInternetUri.isNotBlank()) {
+                            handleUri(viewModel, tmpInternetUri.toUri(), imgType)
+                        }
                     }
                 ) {
                     Text("Ok", fontSize = 22.sp)
                 }
-
             }
         )
     }
+}
+
+fun handleUri(viewModel: UiViewModel, uri: Uri, imgType: ImageType) {
+    viewModel.setLoadUri(imgType, uri)
 }

@@ -1,8 +1,7 @@
 package com.example.myapplication.ui.components
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -17,103 +16,107 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
+import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
+import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChipCreateDialog(
     viewModel: UiViewModel
 ) {
-    val painter = rememberAsyncImagePainter(
-        model = viewModel.chipUri,
-        onError = { result ->
-            // result.throwable содержит причину ошибки
-            android.util.Log.e("CoilError", "Ошибка загрузки: $result")
-            android.util.Log.e("CoilError", "URI: ${viewModel.chipUri}")
-        }
-    )
+    val current = LocalContext.current
 
-    if (viewModel.isLoadChipUriFromGallery) {
-        val galleryLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent(),
-            onResult = { uri: Uri? ->
-                uri?.let { viewModel.setUriChip(uri) }
-            }
-        )
+    val coroutineScope = rememberCoroutineScope()
 
-        LaunchedEffect(Unit) {
-            galleryLauncher.launch("image/*")
-        }
+    if (viewModel.isResolveImageSource) {
+        ImageSourceResolver(viewModel)
     }
 
-    if (viewModel.isLoadChipUriFromUri) {
-        var tmpInternetUri by remember { mutableStateOf("") }
+    if (viewModel.isPickImage) {
+        ImgLoader(viewModel, ImageType.CHIP)
+    }
 
-        AlertDialog(
-            onDismissRequest = { viewModel.cancelPickImage() },
-            title = { Text(text = "Введите ссылку на изображение") },
-            text = {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = tmpInternetUri,
-                    onValueChange = { tmpInternetUri = it }
+    var painter: AsyncImagePainter? = null
+
+    if (viewModel.imgLoadUri != null && viewModel.imageLoadType == ImageType.CHIP) {
+        painter = rememberAsyncImagePainter(
+            model = viewModel.imgLoadUri,
+            onError = {
+                android.util.Log.e(
+                    "CoilError",
+                    "URI: ${viewModel.imgLoadUri}, Ошибка загрузки: $it"
                 )
-            },
-            confirmButton = {
-                Button(
-                    {
-                        viewModel.setUriChip(tmpInternetUri.takeIf { it.isNotBlank() }?.toUri())
-                    }
-                ) {
-                    Text("Ок", fontSize = 22.sp)
-                }
-
             }
         )
     }
+
+    var tmpImgName by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = { viewModel.toggleCreateChip() },
         text = {
-            Row(Modifier.fillMaxWidth()) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
                 Column(
                     Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    Text("Имя фишки", fontSize = 22.sp)
+
+                    TextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = tmpImgName,
+                        onValueChange = { tmpImgName = it }
+                    )
+
                     Text("Изображение фишки", fontSize = 22.sp)
 
-                    if (viewModel.chipUri == null) {
+                    if (viewModel.imgLoadUri == null || viewModel.imageLoadType != ImageType.CHIP) {
                         Row(
-                            Modifier.fillMaxWidth(),
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Button(
-                                {
-                                    viewModel.imageChipFromGallery()
+                                enabled = tmpImgName.isNotBlank(),
+                                onClick = {
+                                    viewModel.imageName = tmpImgName
+
+                                    viewModel.toggleNeedResolveImageDialog()
                                 }
-                            ) { Text("Из галереи", fontSize = 22.sp) }
-                            Button(
-                                {
-                                    viewModel.imageChipFromInternet()
-                                }
-                            ) { Text("Из интернета", fontSize = 22.sp) }
+                            ) { Text("Загрузить изображение фишки", fontSize = 22.sp) }
                         }
                     } else {
-                        Canvas(
+                        Row(
                             Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .background(Color.Red)
-                                .border(
-                                    BorderStroke(4.dp, Color.Black),
-                                    CircleShape
-                                )
+                                .fillMaxWidth()
+                                .padding(0.dp, 20.dp),
+                            horizontalArrangement = Arrangement.Center
                         ) {
-                            with(painter) {
-                                draw(size)
+                            Canvas(
+                                Modifier
+                                    .size(100.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Red)
+                                    .border(
+                                        BorderStroke(4.dp, Color.Black),
+                                        CircleShape
+                                    )
+                            ) {
+                                if (painter != null) {
+                                    with(painter) {
+                                        draw(size)
+                                    }
+                                }
                             }
                         }
                     }
@@ -123,7 +126,18 @@ fun ChipCreateDialog(
         confirmButton = {
             Button(
                 {
-                    viewModel.toggleCreateChip()
+                    if (
+                        viewModel.imgLoadUri != null
+                        && viewModel.imageLoadType == ImageType.CHIP
+                        && viewModel.imageName != null
+                        && viewModel.imageName!!.isNotBlank()
+                    ) {
+                        coroutineScope.launch {
+                            save(current, viewModel)
+
+                            viewModel.toggleCreateChip()
+                        }
+                    }
                 }
             ) { Text("Ок", fontSize = 22.sp) }
         },

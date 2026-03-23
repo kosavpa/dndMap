@@ -8,21 +8,13 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
-fun ImageCreatorDialog(
+fun ImageSourceResolver(
     viewModel: UiViewModel
 ) {
     AlertDialog(
-        onDismissRequest = { viewModel.toggleNeedOpenImageDialog() },
-        title = { Text(text = "Откуда вы хотите загрузить изображение?") },
-        text = {
-            Text(
-                """
-                    Выбиреите место загрузки изображения,
-                    помните что изображение должно быть подходящих размеров,
-                    иначе оно будет выглядить не качественно
-                """.trimIndent()
-            )
-        },
+        onDismissRequest = { viewModel.toggleNeedResolveImageDialog() },
+        title = { Text("Выберите место загрузки изображения") },
+        text = { Text("Откуда вы хотите загрузить изображение?") },
         confirmButton = {
             Button(
                 {
@@ -38,7 +30,7 @@ fun ImageCreatorDialog(
                     viewModel.imageFromGallery()
                 }
             ) {
-                Text("Из галлереи", fontSize = 22.sp)
+                Text("Из галереи", fontSize = 22.sp)
             }
         }
     )

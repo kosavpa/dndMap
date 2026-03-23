@@ -10,23 +10,17 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 class UiViewModel : ViewModel() {
-    var isLoadChipUriFromUri by mutableStateOf(false)
-        private set
+    var imageName: String? = null
+    var isPickImage by mutableStateOf(false)
 
-    var chipUri by mutableStateOf<Uri?>(null)
-        private set
+    var scaleControllerBoxIsVisible by mutableStateOf(false)
 
-    var isLoadChipUriFromGallery by mutableStateOf(false)
-        private set
-
-    var scaleControllerBoxIsVisible  by mutableStateOf(false)
-
-    var gridSizeControllerBoxIsVisible  by mutableStateOf(false)
+    var gridSizeControllerBoxIsVisible by mutableStateOf(false)
 
     var showGrid by mutableStateOf(false)
         private set
 
-    var isOpenImagePickerDialog by mutableStateOf(false)
+    var isResolveImageSource by mutableStateOf(false)
         private set
 
     var isFromGallery by mutableStateOf(false)
@@ -35,8 +29,23 @@ class UiViewModel : ViewModel() {
     var isFromInternet by mutableStateOf(false)
         private set
 
-    var imageUri by mutableStateOf<Uri?>(null)
+    var imageLoadType: ImageType? = null
         private set
+
+    var imgLoadUri by mutableStateOf<Uri?>(null)
+        private set
+
+    var selectedMapUri: Uri?
+        get() = innerSelectedMapUri
+        set(value) {
+            innerSelectedMapUri = value
+
+            toggleCreateMap()
+
+            toggleCreateChip()
+        }
+
+    private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
 
     private val _startCellSize = 63f
 
@@ -52,76 +61,96 @@ class UiViewModel : ViewModel() {
 
     var offset by mutableStateOf(Offset.Zero)
 
-    var isNeedOpenChipCreationScreen by mutableStateOf(false)
-        private set
-
-    fun setUri(uri: Uri?) {
-        imageUri = uri
-
-        isFromGallery = false
-
-        isFromInternet = false
-    }
-
-    fun setUriChip(uri: Uri?) {
-        chipUri = uri
-
-        isLoadChipUriFromUri = false
-
-        isLoadChipUriFromGallery = false
-    }
-
     fun toggleShowGrid() {
         showGrid = !showGrid
     }
 
-    fun toggleNeedOpenImageDialog() {
-        isOpenImagePickerDialog = !isOpenImagePickerDialog
+    var isNeedOpenMapCreationScreen by mutableStateOf(false)
+        private set
+
+    var isNeedOpenChipCreationScreen by mutableStateOf(false)
+        private set
+
+
+    fun setLoadUri(imgType: ImageType?, uri: Uri?) {
+        imgLoadUri = uri
+
+        imageLoadType = imgType
+
+        clearLoadParams()
+
+        cancelResolveOrPickImage()
     }
 
-    fun cancelPickImage() {
-        isOpenImagePickerDialog = false
-
+    fun clearLoadParams() {
         isFromGallery = false
 
         isFromInternet = false
     }
 
-    fun imageFromInternet() {
-        isOpenImagePickerDialog = false
-
-        isFromGallery = false
-
-        isFromInternet = true
-    }
-
-    fun imageFromGallery() {
-        isOpenImagePickerDialog = false
-
-        isFromInternet = false
-
-        isFromGallery = true
-    }
-
-    fun imageChipFromInternet() {
-        isLoadChipUriFromGallery = false
-
-        isLoadChipUriFromUri = true
-    }
-
-    fun imageChipFromGallery() {
-        isLoadChipUriFromUri = false
-
-        isLoadChipUriFromGallery = true
-    }
-
-    fun boxSizeControllerIsVisible(): Boolean {
-        return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
+    fun toggleNeedResolveImageDialog() {
+        isResolveImageSource = !isResolveImageSource
     }
 
     fun toggleCreateChip() {
         isNeedOpenChipCreationScreen = !isNeedOpenChipCreationScreen
 
-        setUriChip(null)
+        imageLoadType = null
+
+        imgLoadUri = null
+
+        imageName = null
+
+        cancelResolveOrPickImage()
+
+        clearLoadParams()
+    }
+
+    fun toggleCreateMap() {
+        isNeedOpenMapCreationScreen = !isNeedOpenMapCreationScreen
+
+        imageLoadType = null
+
+        imgLoadUri = null
+
+        imageName = null
+
+        cancelResolveOrPickImage()
+
+        clearLoadParams()
+    }
+
+    fun cancelResolveOrPickImage() {
+        isResolveImageSource = false
+
+        isFromGallery = false
+
+        isFromInternet = false
+
+        isPickImage = false
+    }
+
+    fun imageFromInternet() {
+        isResolveImageSource = false
+
+        isFromGallery = false
+
+        isFromInternet = true
+
+        isPickImage = true
+    }
+
+    fun imageFromGallery() {
+        isResolveImageSource = false
+
+        isFromInternet = false
+
+        isFromGallery = true
+
+        isPickImage = true
+    }
+
+    fun boxSizeControllerIsVisible(): Boolean {
+        return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 }
