@@ -1,11 +1,14 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.util
 
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
+import com.example.myapplication.ui.model.Map
 import com.example.myapplication.ui.model.UiViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.internal.toImmutableList
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -51,3 +54,36 @@ fun copyFromIS(input: InputStream, imagePath: Path) {
 }
 
 private var FILE_SEPARATOR = "?$?"
+
+fun loadFile(offset: Int, count: Int, context: Context, viewModel: UiViewModel) {
+    val dir = File(
+        context.filesDir,
+        viewModel.imageLoadType!!.name
+    )
+
+    val fileNames = dir.list()
+
+    if (fileNames == null || fileNames.isEmpty()) {
+        return
+    }
+
+    if (fileNames.count() >= offset) {
+        val tmpMapList = mutableListOf<Map>()
+
+        tmpMapList.addAll(viewModel.loadedItems)
+        tmpMapList.addAll(
+                fileNames.drop(offset)
+                    .take(count)
+                    .map { createMap(it, dir) }
+                    .toList()
+            )
+
+        viewModel.loadedItems = tmpMapList.toImmutableList()
+    } else {
+        viewModel.loadedItems = fileNames.map { createMap(it, dir) }.toImmutableList()
+    }
+}
+
+fun createMap(name: String, dir: File): Map {
+    return Map(name, File(dir, name).toUri())
+}

@@ -23,6 +23,7 @@ import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.util.save
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -59,7 +60,7 @@ fun ChipCreateDialog(
     var tmpImgName by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = { viewModel.toggleCreateChip() },
+        onDismissRequest = { viewModel.finishCreateChip() },
         text = {
             Row(
                 Modifier.fillMaxWidth(),
@@ -135,7 +136,7 @@ fun ChipCreateDialog(
                         coroutineScope.launch {
                             save(current, viewModel)
 
-                            viewModel.toggleCreateChip()
+                            viewModel.finishCreateChip()
                         }
                     }
                 }
@@ -144,7 +145,7 @@ fun ChipCreateDialog(
         dismissButton = {
             Button(
                 {
-                    viewModel.toggleCreateChip()
+                    viewModel.finishCreateChip()
                 }
             ) { Text("Отмена", fontSize = 22.sp) }
         }

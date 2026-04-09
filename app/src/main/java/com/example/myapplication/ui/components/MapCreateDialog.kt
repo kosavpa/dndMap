@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.util.save
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -39,7 +40,7 @@ fun MapCreateDialog(
     var tmpImgName by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = { viewModel.toggleCreateMap() },
+        onDismissRequest = { viewModel.finishCreateMapScreen() },
         text = {
             Column(
                 Modifier
@@ -84,7 +85,7 @@ fun MapCreateDialog(
                         coroutineScope.launch {
                             save(current, viewModel)
 
-                            viewModel.toggleCreateMap()
+                            viewModel.finishCreateMapScreen()
                         }
                     }
 
@@ -94,7 +95,7 @@ fun MapCreateDialog(
         dismissButton = {
             Button(
                 {
-                    viewModel.toggleCreateMap()
+                    viewModel.finishCreateMapScreen()
                 }
             ) { Text("Отмена", fontSize = 22.sp) }
         }

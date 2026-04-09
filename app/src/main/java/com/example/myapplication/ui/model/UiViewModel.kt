@@ -8,9 +8,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
+import okhttp3.internal.immutableListOf
 
 class UiViewModel : ViewModel() {
+    var loadedItems by mutableStateOf(immutableListOf<Map>())
+
+    val lazyItemsCount = 4
+
+    var isNeedOpenSelectScreen by mutableStateOf(false)
+
     var imageName: String? = null
+
     var isPickImage by mutableStateOf(false)
 
     var scaleControllerBoxIsVisible by mutableStateOf(false)
@@ -40,9 +48,9 @@ class UiViewModel : ViewModel() {
         set(value) {
             innerSelectedMapUri = value
 
-            toggleCreateMap()
+            finishCreateMapScreen()
 
-            toggleCreateChip()
+            finishCreateChip()
         }
 
     private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
@@ -92,7 +100,7 @@ class UiViewModel : ViewModel() {
         isResolveImageSource = !isResolveImageSource
     }
 
-    fun toggleCreateChip() {
+    fun finishCreateChip() {
         isNeedOpenChipCreationScreen = !isNeedOpenChipCreationScreen
 
         imageLoadType = null
@@ -106,7 +114,7 @@ class UiViewModel : ViewModel() {
         clearLoadParams()
     }
 
-    fun toggleCreateMap() {
+    fun finishCreateMapScreen() {
         isNeedOpenMapCreationScreen = !isNeedOpenMapCreationScreen
 
         imageLoadType = null
@@ -152,5 +160,19 @@ class UiViewModel : ViewModel() {
 
     fun boxSizeControllerIsVisible(): Boolean {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
+    }
+
+    fun clearLoadSelectItems() {
+        loadedItems = immutableListOf()
+
+        imageLoadType = null
+
+        isNeedOpenSelectScreen = false
+    }
+
+    fun startSelectItem(imgType: ImageType) {
+        isNeedOpenSelectScreen = !isNeedOpenSelectScreen
+
+        imageLoadType = imgType
     }
 }

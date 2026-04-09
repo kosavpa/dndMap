@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
@@ -17,9 +18,9 @@ fun MenuWindow(
     viewModel: UiViewModel
 ) {
     ConstraintLayout {
-        val (button1, button2, button3) = createRefs()
+        val (button1, button2, button3, button4) = createRefs()
 
-        createVerticalChain(button1, button2, button3)
+        createVerticalChain(button1, button2, button3, button4)
 
         TextButton(
             modifier = Modifier
@@ -31,7 +32,27 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.toggleCreateMap()
+                viewModel.startSelectItem(ImageType.MAP)
+            },
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.LightGray,
+                containerColor = Color.Transparent
+            )
+        ) {
+            Text("Выбрать карту", fontSize = 22.sp)
+        }
+
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(button2) {
+                    centerHorizontallyTo(parent)
+
+                    top.linkTo(parent.top)
+
+                },
+            onClick = {
+                viewModel.finishCreateMapScreen()
 
                 closeDrawer.invoke()
             },
@@ -46,13 +67,13 @@ fun MenuWindow(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(button2) {
+                .constrainAs(button3) {
                     centerHorizontallyTo(parent)
 
                     top.linkTo(parent.top)
                 },
             onClick = {
-                viewModel.toggleCreateChip()
+                viewModel.finishCreateChip()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,
@@ -65,7 +86,7 @@ fun MenuWindow(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(button3) {
+                .constrainAs(button4) {
                     centerHorizontallyTo(parent)
 
                     top.linkTo(parent.top)

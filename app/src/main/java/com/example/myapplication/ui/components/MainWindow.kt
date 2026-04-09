@@ -32,6 +32,8 @@ fun MainWindow(
             MapCreateDialog(viewModel)
         } else if (viewModel.imgLoadUri != null && viewModel.imageLoadType == ImageType.MAP) {
             ImageDrawer(viewModel)
+        } else if (viewModel.isNeedOpenSelectScreen) {
+            SelectScreen(viewModel)
         }
 
         IconButton(
