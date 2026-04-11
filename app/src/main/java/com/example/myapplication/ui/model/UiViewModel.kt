@@ -13,9 +13,17 @@ import okhttp3.internal.immutableListOf
 class UiViewModel : ViewModel() {
     var loadedMaps by mutableStateOf(immutableListOf<Map>())
 
+    var loadedChips by mutableStateOf(immutableListOf<Chip>())
+
+    var selectedChips by mutableStateOf(immutableListOf<Chip>())
+
     val lazyMapCount = 4
 
+    val lazyChipCount = 8
+
     var isNeedOpenSelectMapScreen by mutableStateOf(false)
+
+    var isNeedOpenSelectChipScreen by mutableStateOf(false)
 
     var imageName: String? = null
 
@@ -52,7 +60,9 @@ class UiViewModel : ViewModel() {
 
             finishCreateChip()
 
-            clearSelectMapParams()
+            finishSelectMapParams()
+
+            clearSelectChipParams()
         }
 
     private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
@@ -162,7 +172,7 @@ class UiViewModel : ViewModel() {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 
-    fun clearSelectMapParams() {
+    fun finishSelectMapParams() {
         loadedMaps = immutableListOf()
 
         imageLoadType = null
@@ -178,5 +188,25 @@ class UiViewModel : ViewModel() {
 
     fun selectMap(uri: Uri) {
         selectedMapUri = uri
+    }
+
+    fun startSelectChip() {
+        isNeedOpenSelectChipScreen = true
+
+        imageLoadType = ImageType.CHIP
+    }
+
+    fun finishSelectChipParams() {
+        loadedMaps = immutableListOf()
+
+        imageLoadType = null
+
+        isNeedOpenSelectChipScreen = false
+    }
+
+    fun clearSelectChipParams() {
+        finishSelectChipParams()
+
+        selectedChips = immutableListOf()
     }
 }

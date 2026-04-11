@@ -17,9 +17,9 @@ fun MenuWindow(
     viewModel: UiViewModel
 ) {
     ConstraintLayout {
-        val (button1, button2, button3, button4) = createRefs()
+        val (button1, button2, button3, button4, button5) = createRefs()
 
-        createVerticalChain(button1, button2, button3, button4)
+        createVerticalChain(button1, button2, button3, button4, button5)
 
         TextButton(
             modifier = Modifier
@@ -53,6 +53,28 @@ fun MenuWindow(
 
                 },
             onClick = {
+                viewModel.startSelectChip()
+
+                closeDrawer.invoke()
+            },
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.LightGray,
+                containerColor = Color.Transparent
+            )
+        ) {
+            Text("Выбрать фишку", fontSize = 22.sp)
+        }
+
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(button3) {
+                    centerHorizontallyTo(parent)
+
+                    top.linkTo(parent.top)
+
+                },
+            onClick = {
                 viewModel.startCreateMapScreen()
 
                 closeDrawer.invoke()
@@ -68,7 +90,7 @@ fun MenuWindow(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(button3) {
+                .constrainAs(button4) {
                     centerHorizontallyTo(parent)
 
                     top.linkTo(parent.top)
@@ -89,7 +111,7 @@ fun MenuWindow(
         TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(button4) {
+                .constrainAs(button5) {
                     centerHorizontallyTo(parent)
 
                     top.linkTo(parent.top)

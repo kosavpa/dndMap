@@ -38,7 +38,11 @@ fun MainWindow(
         }
 
         if (viewModel.isNeedOpenSelectMapScreen) {
-            SelectScreen(viewModel)
+            SelectMapScreen(viewModel)
+        }
+
+        if (viewModel.isNeedOpenSelectChipScreen) {
+            SelectChipScreen(viewModel)
         }
 
         IconButton(
