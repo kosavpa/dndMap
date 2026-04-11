@@ -1,7 +1,9 @@
 package com.example.myapplication.ui.components
 
+import android.view.MotionEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -61,10 +64,10 @@ fun SelectScreen(viewModel: UiViewModel) {
     }
 
     LaunchedEffect(shouldLoadMore.value) {
-        if (shouldLoadMore.value || viewModel.loadedItems.isEmpty()) {
+        if (shouldLoadMore.value || viewModel.loadedMaps.isEmpty()) {
             loadFile(
-                viewModel.loadedItems.size,
-                viewModel.lazyItemsCount,
+                viewModel.loadedMaps.size,
+                viewModel.lazyMapCount,
                 current,
                 viewModel
             )
@@ -73,19 +76,36 @@ fun SelectScreen(viewModel: UiViewModel) {
 
     AlertDialog(
         modifier = Modifier
-            .width(800.dp)
-            .height(360.dp),
+            .width(600.dp)
+            .height(460.dp),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = { viewModel.clearLoadSelectItems() },
+        onDismissRequest = { viewModel.clearSelectMapParams() },
         text = {
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(state = listState) {
-                    items(
-                        items = viewModel.loadedItems,
-                        key = { it.name }
-                    ) {
+                    items(viewModel.loadedMaps) {
+                        var isHover by remember { mutableStateOf(false) }
+
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .pointerInteropFilter { action ->
+                                    isHover = when (action.action) {
+                                        MotionEvent.ACTION_DOWN,
+                                        MotionEvent.ACTION_UP,
+                                        MotionEvent.ACTION_HOVER_ENTER -> true
+                                        else -> false
+                                    }
+
+                                    false
+
+                                }
+                                .background(
+                                    if (isHover) Color.LightGray else Color.Transparent,
+                                    shape = RoundedCornerShape(20.dp)
+                                )
+                                .padding(4.dp)
+                                .clickable { viewModel.selectMap(it.uri) },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -94,15 +114,17 @@ fun SelectScreen(viewModel: UiViewModel) {
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .size(200.dp)
+                                    .fillMaxWidth()
+                                    .height(280.dp)
                                     .clip(RoundedCornerShape(16.dp))
                             )
-
-                            Text(
-                                modifier = Modifier.padding(4.dp),
-                                text = it.name,
-                                fontSize = 24.sp
-                            )
+                            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                                Text(
+                                    modifier = Modifier.padding(4.dp),
+                                    text = it.name,
+                                    fontSize = 24.sp
+                                )
+                            }
                         }
                     }
                 }
@@ -140,7 +162,7 @@ fun SelectScreen(viewModel: UiViewModel) {
         dismissButton = {
             Button(
                 {
-                    viewModel.clearLoadSelectItems()
+                    viewModel.clearSelectMapParams()
                 }
             ) { Text("Отмена", fontSize = 22.sp) }
         }

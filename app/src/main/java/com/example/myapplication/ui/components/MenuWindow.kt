@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
 
 @Composable
@@ -32,7 +31,9 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.startSelectItem(ImageType.MAP)
+                viewModel.startSelectMap()
+
+                closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,
@@ -52,7 +53,7 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.finishCreateMapScreen()
+                viewModel.startCreateMapScreen()
 
                 closeDrawer.invoke()
             },
@@ -73,7 +74,9 @@ fun MenuWindow(
                     top.linkTo(parent.top)
                 },
             onClick = {
-                viewModel.finishCreateChip()
+                viewModel.startCreateChip()
+
+                closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.LightGray,

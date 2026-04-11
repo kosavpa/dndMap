@@ -62,61 +62,56 @@ fun ChipCreateDialog(
     AlertDialog(
         onDismissRequest = { viewModel.finishCreateChip() },
         text = {
-            Row(
+            Column(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                Column(
-                    Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text("Имя фишки", fontSize = 22.sp)
+                Text("Имя фишки", fontSize = 22.sp)
 
-                    TextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = tmpImgName,
-                        onValueChange = { tmpImgName = it }
-                    )
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = tmpImgName,
+                    onValueChange = { tmpImgName = it }
+                )
 
-                    Text("Изображение фишки", fontSize = 22.sp)
+                Text("Изображение фишки", fontSize = 22.sp)
 
-                    if (viewModel.imgLoadUri == null || viewModel.imageLoadType != ImageType.CHIP) {
-                        Row(
+                if (viewModel.imgLoadUri == null || viewModel.imageLoadType != ImageType.CHIP) {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 20.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(
+                            enabled = tmpImgName.isNotBlank(),
+                            onClick = {
+                                viewModel.imageName = tmpImgName
+
+                                viewModel.toggleNeedResolveImageDialog()
+                            }
+                        ) { Text("Загрузить изображение фишки", fontSize = 22.sp) }
+                    }
+                } else {
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(0.dp, 20.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Canvas(
                             Modifier
-                                .fillMaxWidth()
-                                .padding(0.dp, 20.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                                .size(100.dp)
+                                .clip(CircleShape)
+                                .background(Color.Red)
+                                .border(
+                                    BorderStroke(4.dp, Color.Black),
+                                    CircleShape
+                                )
                         ) {
-                            Button(
-                                enabled = tmpImgName.isNotBlank(),
-                                onClick = {
-                                    viewModel.imageName = tmpImgName
-
-                                    viewModel.toggleNeedResolveImageDialog()
-                                }
-                            ) { Text("Загрузить изображение фишки", fontSize = 22.sp) }
-                        }
-                    } else {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(0.dp, 20.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Canvas(
-                                Modifier
-                                    .size(100.dp)
-                                    .clip(CircleShape)
-                                    .background(Color.Red)
-                                    .border(
-                                        BorderStroke(4.dp, Color.Black),
-                                        CircleShape
-                                    )
-                            ) {
-                                if (painter != null) {
-                                    with(painter) {
-                                        draw(size)
-                                    }
+                            if (painter != null) {
+                                with(painter) {
+                                    draw(size)
                                 }
                             }
                         }

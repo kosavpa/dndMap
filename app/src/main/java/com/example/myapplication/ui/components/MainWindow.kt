@@ -12,7 +12,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -26,13 +25,19 @@ fun MainWindow(
             .fillMaxSize()
             .background(Color.Red)
     ) {
+        if (viewModel.selectedMapUri != null) {
+            ImageDrawer(viewModel)
+        }
+
         if (viewModel.isNeedOpenChipCreationScreen) {
             ChipCreateDialog(viewModel)
-        } else if (viewModel.isNeedOpenMapCreationScreen) {
+        }
+
+        if (viewModel.isNeedOpenMapCreationScreen) {
             MapCreateDialog(viewModel)
-        } else if (viewModel.imgLoadUri != null && viewModel.imageLoadType == ImageType.MAP) {
-            ImageDrawer(viewModel)
-        } else if (viewModel.isNeedOpenSelectScreen) {
+        }
+
+        if (viewModel.isNeedOpenSelectMapScreen) {
             SelectScreen(viewModel)
         }
 

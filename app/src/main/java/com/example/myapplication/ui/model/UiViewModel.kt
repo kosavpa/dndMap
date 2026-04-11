@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModel
 import okhttp3.internal.immutableListOf
 
 class UiViewModel : ViewModel() {
-    var loadedItems by mutableStateOf(immutableListOf<Map>())
+    var loadedMaps by mutableStateOf(immutableListOf<Map>())
 
-    val lazyItemsCount = 4
+    val lazyMapCount = 4
 
-    var isNeedOpenSelectScreen by mutableStateOf(false)
+    var isNeedOpenSelectMapScreen by mutableStateOf(false)
 
     var imageName: String? = null
 
@@ -51,6 +51,8 @@ class UiViewModel : ViewModel() {
             finishCreateMapScreen()
 
             finishCreateChip()
+
+            clearSelectMapParams()
         }
 
     private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
@@ -85,38 +87,38 @@ class UiViewModel : ViewModel() {
 
         imageLoadType = imgType
 
-        clearLoadParams()
-
         cancelResolveOrPickImage()
-    }
-
-    fun clearLoadParams() {
-        isFromGallery = false
-
-        isFromInternet = false
     }
 
     fun toggleNeedResolveImageDialog() {
         isResolveImageSource = !isResolveImageSource
     }
 
+    fun startCreateChip() {
+        isNeedOpenChipCreationScreen = true
+
+        clearImageParams()
+    }
+
     fun finishCreateChip() {
-        isNeedOpenChipCreationScreen = !isNeedOpenChipCreationScreen
+        isNeedOpenChipCreationScreen = false
 
-        imageLoadType = null
+        clearImageParams()
+    }
 
-        imgLoadUri = null
+    fun startCreateMapScreen() {
+        isNeedOpenMapCreationScreen = true
 
-        imageName = null
-
-        cancelResolveOrPickImage()
-
-        clearLoadParams()
+        clearImageParams()
     }
 
     fun finishCreateMapScreen() {
-        isNeedOpenMapCreationScreen = !isNeedOpenMapCreationScreen
+        isNeedOpenMapCreationScreen = false
 
+        clearImageParams()
+    }
+
+    fun clearImageParams() {
         imageLoadType = null
 
         imgLoadUri = null
@@ -124,8 +126,6 @@ class UiViewModel : ViewModel() {
         imageName = null
 
         cancelResolveOrPickImage()
-
-        clearLoadParams()
     }
 
     fun cancelResolveOrPickImage() {
@@ -162,17 +162,21 @@ class UiViewModel : ViewModel() {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 
-    fun clearLoadSelectItems() {
-        loadedItems = immutableListOf()
+    fun clearSelectMapParams() {
+        loadedMaps = immutableListOf()
 
         imageLoadType = null
 
-        isNeedOpenSelectScreen = false
+        isNeedOpenSelectMapScreen = false
     }
 
-    fun startSelectItem(imgType: ImageType) {
-        isNeedOpenSelectScreen = !isNeedOpenSelectScreen
+    fun startSelectMap() {
+        isNeedOpenSelectMapScreen = true
 
-        imageLoadType = imgType
+        imageLoadType = ImageType.MAP
+    }
+
+    fun selectMap(uri: Uri) {
+        selectedMapUri = uri
     }
 }

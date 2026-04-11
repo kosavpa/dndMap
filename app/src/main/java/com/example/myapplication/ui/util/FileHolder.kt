@@ -70,7 +70,7 @@ fun loadFile(offset: Int, count: Int, context: Context, viewModel: UiViewModel) 
     if (fileNames.count() >= offset) {
         val tmpMapList = mutableListOf<Map>()
 
-        tmpMapList.addAll(viewModel.loadedItems)
+        tmpMapList.addAll(viewModel.loadedMaps)
         tmpMapList.addAll(
                 fileNames.drop(offset)
                     .take(count)
@@ -78,12 +78,12 @@ fun loadFile(offset: Int, count: Int, context: Context, viewModel: UiViewModel) 
                     .toList()
             )
 
-        viewModel.loadedItems = tmpMapList.toImmutableList()
+        viewModel.loadedMaps = tmpMapList.toImmutableList()
     } else {
-        viewModel.loadedItems = fileNames.map { createMap(it, dir) }.toImmutableList()
+        viewModel.loadedMaps = fileNames.map { createMap(it, dir) }.toImmutableList()
     }
 }
 
 fun createMap(name: String, dir: File): Map {
-    return Map(name, File(dir, name).toUri())
+    return Map(name.split(FILE_SEPARATOR)[0], File(dir, name).toUri())
 }
