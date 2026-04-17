@@ -8,22 +8,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
-import okhttp3.internal.immutableListOf
 
 class UiViewModel : ViewModel() {
-    var loadedMaps by mutableStateOf(immutableListOf<Map>())
+    var loadedSelectItems by mutableStateOf(mutableListOf<SelectItem>())
 
-    var loadedChips by mutableStateOf(immutableListOf<Chip>())
+    var selectedItems by mutableStateOf(mutableListOf<SelectItem>())
 
-    var selectedChips by mutableStateOf(immutableListOf<Chip>())
+    val lazyLoadedItems = 8
 
-    val lazyMapCount = 4
-
-    val lazyChipCount = 8
-
-    var isNeedOpenSelectMapScreen by mutableStateOf(false)
-
-    var isNeedOpenSelectChipScreen by mutableStateOf(false)
+    var isNeedOpenSelectScreen by mutableStateOf(false)
 
     var imageName: String? = null
 
@@ -60,9 +53,7 @@ class UiViewModel : ViewModel() {
 
             finishCreateChip()
 
-            finishSelectMapParams()
-
-            clearSelectChipParams()
+            finishSelectItemsParams()
         }
 
     private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
@@ -172,41 +163,35 @@ class UiViewModel : ViewModel() {
         return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
     }
 
-    fun finishSelectMapParams() {
-        loadedMaps = immutableListOf()
-
-        imageLoadType = null
-
-        isNeedOpenSelectMapScreen = false
-    }
-
     fun startSelectMap() {
-        isNeedOpenSelectMapScreen = true
+        isNeedOpenSelectScreen = true
 
         imageLoadType = ImageType.MAP
     }
 
-    fun selectMap(uri: Uri) {
-        selectedMapUri = uri
+    fun selectMap() {
+        selectedMapUri = selectedItems.first().uri
     }
 
     fun startSelectChip() {
-        isNeedOpenSelectChipScreen = true
+        isNeedOpenSelectScreen = true
 
         imageLoadType = ImageType.CHIP
     }
 
-    fun finishSelectChipParams() {
-        loadedMaps = immutableListOf()
+    fun finishSelectItemsParams() {
+        loadedSelectItems.clear()
 
         imageLoadType = null
 
-        isNeedOpenSelectChipScreen = false
+        isNeedOpenSelectScreen = false
     }
 
-    fun clearSelectChipParams() {
-        finishSelectChipParams()
-
-        selectedChips = immutableListOf()
+    fun addSelectItem(item: SelectItem) {
+        if (imageLoadType == ImageType.MAP) {
+            selectedItems.add(0, item)
+        } else {
+            selectedItems.add(item)
+        }
     }
 }

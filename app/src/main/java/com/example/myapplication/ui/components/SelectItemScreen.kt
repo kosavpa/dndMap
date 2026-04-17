@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.components
 
-import android.view.MotionEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -28,10 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.model.UiViewModel
-import com.example.myapplication.ui.util.loadMapFile
+import com.example.myapplication.ui.util.loadSelectFiles
 
 @Composable
-fun SelectMapScreen(viewModel: UiViewModel) {
+fun SelectItemScreen(
+    viewModel: UiViewModel
+) {
     val current = LocalContext.current
 
     val listState = rememberLazyListState()
@@ -64,13 +64,8 @@ fun SelectMapScreen(viewModel: UiViewModel) {
     }
 
     LaunchedEffect(shouldLoadMore.value) {
-        if (shouldLoadMore.value || viewModel.loadedMaps.isEmpty()) {
-            loadMapFile(
-                viewModel.loadedMaps.size,
-                viewModel.lazyMapCount,
-                current,
-                viewModel
-            )
+        if (shouldLoadMore.value || viewModel.loadedSelectItems.isEmpty()) {
+            loadSelectFiles(current, viewModel)
         }
     }
 
@@ -79,33 +74,25 @@ fun SelectMapScreen(viewModel: UiViewModel) {
             .width(600.dp)
             .height(460.dp),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = { viewModel.finishSelectMapParams() },
+        onDismissRequest = { viewModel.finishSelectItemsParams() },
         text = {
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(state = listState) {
-                    items(viewModel.loadedMaps) {
+                    items(viewModel.loadedSelectItems) {
                         var isHover by remember { mutableStateOf(false) }
 
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .pointerInteropFilter { action ->
-                                    isHover = when (action.action) {
-                                        MotionEvent.ACTION_DOWN,
-                                        MotionEvent.ACTION_UP,
-                                        MotionEvent.ACTION_HOVER_ENTER -> true
-                                        else -> false
-                                    }
-
-                                    false
-
-                                }
                                 .background(
-                                    if (isHover) Color.LightGray else Color.Transparent,
+                                    if (isHover) Color.Red else Color.Transparent,
                                     shape = RoundedCornerShape(20.dp)
                                 )
                                 .padding(4.dp)
-                                .clickable { viewModel.selectMap(it.uri) },
+                                .clickable {
+                                    isHover = !isHover
+                                    viewModel.addSelectItem(it)
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -114,8 +101,7 @@ fun SelectMapScreen(viewModel: UiViewModel) {
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(280.dp)
+                                    .size(100.dp)
                                     .clip(RoundedCornerShape(16.dp))
                             )
                             Row(horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -156,13 +142,14 @@ fun SelectMapScreen(viewModel: UiViewModel) {
         confirmButton = {
             Button(
                 {
+                    viewModel.selectMap()
                 }
             ) { Text("Ок", fontSize = 22.sp) }
         },
         dismissButton = {
             Button(
                 {
-                    viewModel.finishSelectMapParams()
+                    viewModel.finishSelectItemsParams()
                 }
             ) { Text("Отмена", fontSize = 22.sp) }
         }

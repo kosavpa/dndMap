@@ -4,13 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import com.example.myapplication.ui.model.Chip
-import com.example.myapplication.ui.model.ImageType
-import com.example.myapplication.ui.model.Map
+import com.example.myapplication.ui.model.SelectItem
 import com.example.myapplication.ui.model.UiViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.internal.toImmutableList
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -57,10 +54,12 @@ fun copyFromIS(input: InputStream, imagePath: Path) {
 
 private var FILE_SEPARATOR = "?$?"
 
-fun loadMapFile(offset: Int, count: Int, context: Context, viewModel: UiViewModel) {
+fun loadSelectFiles(context: Context, viewModel: UiViewModel) {
+    checkNotNull(viewModel.imageLoadType) { "Image type is required!" }
+
     val dir = File(
         context.filesDir,
-        ImageType.MAP.name
+        viewModel.imageLoadType!!.name
     )
 
     val fileNames = dir.list()
@@ -69,56 +68,23 @@ fun loadMapFile(offset: Int, count: Int, context: Context, viewModel: UiViewMode
         return
     }
 
-    if (fileNames.count() >= offset) {
-        val tmpMapList = mutableListOf<Map>()
-
-        tmpMapList.addAll(viewModel.loadedMaps)
-        tmpMapList.addAll(
-            fileNames.drop(offset)
-                .take(count)
-                .map { createMap(it, dir) }
+    if (fileNames.count() >= viewModel.lazyLoadedItems) {
+        viewModel.loadedSelectItems.addAll(
+            fileNames.drop(viewModel.loadedSelectItems.size)
+                .take(viewModel.lazyLoadedItems)
+                .map { createSelectItem(it, dir) }
                 .toList()
         )
-
-        viewModel.loadedMaps = tmpMapList.toImmutableList()
     } else {
-        viewModel.loadedMaps = fileNames.map { createMap(it, dir) }.toImmutableList()
+        viewModel.loadedSelectItems.addAll(
+            fileNames.map { createSelectItem(it, dir) }
+        )
     }
 }
 
-fun loadChipFile(offset: Int, count: Int, context: Context, viewModel: UiViewModel) {
-    val dir = File(
-        context.filesDir,
-        ImageType.CHIP.name
+fun createSelectItem(name: String, dir: File): SelectItem {
+    return SelectItem(
+        name.split(FILE_SEPARATOR)[0],
+        File(dir, name).toUri()
     )
-
-    val fileNames = dir.list()
-
-    if (fileNames == null || fileNames.isEmpty()) {
-        return
-    }
-
-    if (fileNames.count() >= offset) {
-        val tmpMapList = mutableListOf<Chip>()
-
-        tmpMapList.addAll(viewModel.loadedChips)
-        tmpMapList.addAll(
-            fileNames.drop(offset)
-                .take(count)
-                .map { createChip(it, dir) }
-                .toList()
-        )
-
-        viewModel.loadedChips = tmpMapList.toImmutableList()
-    } else {
-        viewModel.loadedChips = fileNames.map { createChip(it, dir) }.toImmutableList()
-    }
-}
-
-fun createChip(name: String, dir: File): Chip {
-    return Chip(name.split(FILE_SEPARATOR)[0], File(dir, name).toUri())
-}
-
-fun createMap(name: String, dir: File): Map {
-    return Map(name.split(FILE_SEPARATOR)[0], File(dir, name).toUri())
 }
