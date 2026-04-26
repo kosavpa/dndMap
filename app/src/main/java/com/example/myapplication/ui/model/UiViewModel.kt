@@ -8,15 +8,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
+import okhttp3.internal.immutableListOf
+import okhttp3.internal.toImmutableList
 
 class UiViewModel : ViewModel() {
-    var loadedSelectItems by mutableStateOf(mutableListOf<SelectItem>())
 
-    var selectedItems by mutableStateOf(mutableListOf<SelectItem>())
+    val selectViewModel = SelectViewModel()
 
-    val lazyLoadedItems = 8
+    val lazyLoadedItems: Int
+        get() {
+            return selectViewModel.lazyLoadedItems
+        }
 
-    var isNeedOpenSelectScreen by mutableStateOf(false)
+    var loadedSelectItems: List<SelectItem>
+        get() {
+            return selectViewModel.loadedSelectItems
+        }
+        set(value) {
+            selectViewModel.loadedSelectItems = value
+        }
+
+    val isNeedOpenSelectScreen: Boolean
+        get() {
+            return selectViewModel.isNeedOpenSelectScreen
+        }
+
+    var selectedItems by mutableStateOf(immutableListOf<SelectItem>())
+
 
     var imageName: String? = null
 
@@ -27,36 +45,35 @@ class UiViewModel : ViewModel() {
     var gridSizeControllerBoxIsVisible by mutableStateOf(false)
 
     var showGrid by mutableStateOf(false)
-        private set
 
     var isResolveImageSource by mutableStateOf(false)
-        private set
 
     var isFromGallery by mutableStateOf(false)
-        private set
 
     var isFromInternet by mutableStateOf(false)
-        private set
 
-    var imageLoadType: ImageType? = null
-        private set
+    private var imageLoadTypeInner: ImageType? = null
 
-    var imgLoadUri by mutableStateOf<Uri?>(null)
-        private set
+    var imageLoadType: ImageType?
+        get() {
+            if (selectViewModel.isNeedOpenSelectScreen) {
+                return selectViewModel.imageLoadType
+            }
 
-    var selectedMapUri: Uri?
-        get() = innerSelectedMapUri
+            return imageLoadTypeInner
+        }
         set(value) {
-            innerSelectedMapUri = value
-
-            finishCreateMapScreen()
-
-            finishCreateChip()
-
-            finishSelectItemsParams()
+            if (selectViewModel.isNeedOpenSelectScreen) {
+                selectViewModel.imageLoadType = value
+            } else {
+                imageLoadTypeInner = value
+            }
         }
 
-    private var innerSelectedMapUri by mutableStateOf<Uri?>(null)
+
+    var imgLoadUri by mutableStateOf<Uri?>(null)
+
+    var selectedMapUri by mutableStateOf<Uri?>(null)
 
     private val _startCellSize = 63f
 
@@ -77,10 +94,8 @@ class UiViewModel : ViewModel() {
     }
 
     var isNeedOpenMapCreationScreen by mutableStateOf(false)
-        private set
 
     var isNeedOpenChipCreationScreen by mutableStateOf(false)
-        private set
 
 
     fun setLoadUri(imgType: ImageType?, uri: Uri?) {
@@ -164,34 +179,34 @@ class UiViewModel : ViewModel() {
     }
 
     fun startSelectMap() {
-        isNeedOpenSelectScreen = true
-
-        imageLoadType = ImageType.MAP
+        selectViewModel.startSelectMap()
     }
 
-    fun selectMap() {
-        selectedMapUri = selectedItems.first().uri
+    fun itemsSelected() {
+        if (selectViewModel.imageLoadType == ImageType.MAP) {
+            selectedMapUri = selectViewModel.itemsSelected().first().uri
+
+            selectedItems = immutableListOf()
+        } else {
+            selectedItems = selectViewModel.itemsSelected().toImmutableList()
+        }
+
+        finishSelectItemsParams()
     }
 
     fun startSelectChip() {
-        isNeedOpenSelectScreen = true
-
-        imageLoadType = ImageType.CHIP
+        selectViewModel.startSelectChip()
     }
 
     fun finishSelectItemsParams() {
-        loadedSelectItems.clear()
-
-        imageLoadType = null
-
-        isNeedOpenSelectScreen = false
+        selectViewModel.finishSelectItemsParams()
     }
 
     fun addSelectItem(item: SelectItem) {
-        if (imageLoadType == ImageType.MAP) {
-            selectedItems.add(0, item)
-        } else {
-            selectedItems.add(item)
-        }
+        selectViewModel.addSelectItem(item)
+    }
+
+    fun removeSelectedItem(item: SelectItem) {
+        selectViewModel.removeSelectedItem(item)
     }
 }

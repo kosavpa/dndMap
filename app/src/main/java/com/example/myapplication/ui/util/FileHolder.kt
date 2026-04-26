@@ -8,6 +8,7 @@ import com.example.myapplication.ui.model.SelectItem
 import com.example.myapplication.ui.model.UiViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.internal.toImmutableList
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -68,18 +69,22 @@ fun loadSelectFiles(context: Context, viewModel: UiViewModel) {
         return
     }
 
+    val toMutableList = viewModel.loadedSelectItems.toMutableList()
+
     if (fileNames.count() >= viewModel.lazyLoadedItems) {
-        viewModel.loadedSelectItems.addAll(
+        toMutableList.addAll(
             fileNames.drop(viewModel.loadedSelectItems.size)
                 .take(viewModel.lazyLoadedItems)
                 .map { createSelectItem(it, dir) }
                 .toList()
         )
     } else {
-        viewModel.loadedSelectItems.addAll(
+        toMutableList.addAll(
             fileNames.map { createSelectItem(it, dir) }
         )
     }
+
+    viewModel.loadedSelectItems = toMutableList.toImmutableList()
 }
 
 fun createSelectItem(name: String, dir: File): SelectItem {

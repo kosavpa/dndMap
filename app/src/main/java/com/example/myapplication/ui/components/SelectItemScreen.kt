@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.ui.model.ImageType
 import com.example.myapplication.ui.model.UiViewModel
 import com.example.myapplication.ui.util.loadSelectFiles
 
@@ -69,6 +70,9 @@ fun SelectItemScreen(
         }
     }
 
+    val itemToSelectedMap = viewModel.loadedSelectItems
+        .associateWith { remember { mutableStateOf(false) } }
+
     AlertDialog(
         modifier = Modifier
             .width(600.dp)
@@ -79,19 +83,29 @@ fun SelectItemScreen(
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(state = listState) {
                     items(viewModel.loadedSelectItems) {
-                        var isHover by remember { mutableStateOf(false) }
-
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    if (isHover) Color.Red else Color.Transparent,
+                                    if (itemToSelectedMap[it]!!.value) Color.Red else Color.Transparent,
                                     shape = RoundedCornerShape(20.dp)
                                 )
                                 .padding(4.dp)
                                 .clickable {
-                                    isHover = !isHover
-                                    viewModel.addSelectItem(it)
+                                    if (viewModel.imageLoadType == ImageType.MAP) {
+                                        itemToSelectedMap.forEach { (item, state) ->
+                                            state.value = item == it
+                                        }
+                                    } else {
+                                        itemToSelectedMap[it]!!.value =
+                                            !itemToSelectedMap[it]!!.value
+                                    }
+
+                                    if (itemToSelectedMap[it]!!.value) {
+                                        viewModel.addSelectItem(it)
+                                    } else {
+                                        viewModel.removeSelectedItem(it)
+                                    }
                                 },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
@@ -142,7 +156,7 @@ fun SelectItemScreen(
         confirmButton = {
             Button(
                 {
-                    viewModel.selectMap()
+                    viewModel.itemsSelected()
                 }
             ) { Text("Ок", fontSize = 22.sp) }
         },
