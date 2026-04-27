@@ -12,9 +12,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.createItem.component.CreateItemDialog
 import com.example.myapplication.ui.drawer.component.ImageDrawer
-import com.example.myapplication.ui.main.model.UiViewModel
 import com.example.myapplication.ui.selectItem.component.SelectItemScreen
 
 @RequiresApi(Build.VERSION_CODES.O)

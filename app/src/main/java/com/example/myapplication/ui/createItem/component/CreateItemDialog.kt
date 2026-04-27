@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.common.util.save
 import com.example.myapplication.ui.loaderItem.component.ImageSourceResolver
 import com.example.myapplication.ui.loaderItem.component.ImgLoader
-import com.example.myapplication.ui.main.model.UiViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)

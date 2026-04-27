@@ -12,7 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.example.myapplication.ui.main.model.UiViewModel
+import com.example.myapplication.ui.common.model.UiViewModel
 
 @Composable
 fun ImgLoader(viewModel: UiViewModel) {

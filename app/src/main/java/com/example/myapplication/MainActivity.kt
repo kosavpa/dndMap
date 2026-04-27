@@ -15,9 +15,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.main.component.MainWindow
 import com.example.myapplication.ui.main.component.MenuWindow
-import com.example.myapplication.ui.main.model.UiViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

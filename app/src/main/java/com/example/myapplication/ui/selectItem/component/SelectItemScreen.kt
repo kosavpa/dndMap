@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.common.model.ImageType
+import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.common.util.loadSelectFiles
-import com.example.myapplication.ui.main.model.UiViewModel
 
 @Composable
 fun SelectItemScreen(

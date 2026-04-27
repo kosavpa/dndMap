@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
-import com.example.myapplication.ui.main.model.UiViewModel
+import com.example.myapplication.ui.common.model.UiViewModel
 import kotlin.math.floor
 
 @Composable

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
-import com.example.myapplication.ui.main.model.UiViewModel
+import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.selectItem.model.SelectItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -1,21 +1,67 @@
-package com.example.myapplication.ui.main.model
+package com.example.myapplication.ui.common.model
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.ui.common.model.ImageType
 import com.example.myapplication.ui.createItem.model.CreateViewModel
+import com.example.myapplication.ui.drawer.model.DrawerViewModel
 import com.example.myapplication.ui.selectItem.model.SelectItem
 import com.example.myapplication.ui.selectItem.model.SelectViewModel
 import okhttp3.internal.immutableListOf
 import okhttp3.internal.toImmutableList
 
 class UiViewModel : ViewModel() {
+
+    var drawerViewModel = DrawerViewModel()
+
+    val cellSizeRange: ClosedFloatingPointRange<Float>
+        get() {
+            return drawerViewModel.cellSizeRange
+        }
+
+    var cellSize: Float
+        get() {
+            return drawerViewModel.cellSize
+        }
+        set(value) {
+            drawerViewModel.cellSize = value
+        }
+
+    var canvasSize: Size
+        get() {
+            return drawerViewModel.canvasSize
+        }
+        set(value) {
+            drawerViewModel.canvasSize = value
+        }
+
+    var scale: Float
+        get() {
+            return drawerViewModel.scale
+        }
+        set(value) {
+            drawerViewModel.scale = value
+        }
+
+    var offset: Offset
+        get() {
+            return drawerViewModel.offset
+        }
+        set(value) {
+            drawerViewModel.offset = value
+        }
+
+    fun toggleShowGrid() {
+        drawerViewModel.toggleShowGrid()
+    }
+
+    fun boxSizeControllerIsVisible(): Boolean {
+        return drawerViewModel.boxSizeControllerIsVisible()
+    }
 
     val selectViewModel = SelectViewModel()
 
@@ -68,28 +114,6 @@ class UiViewModel : ViewModel() {
         }
 
     var selectedMapUri by mutableStateOf<Uri?>(null)
-
-    private val _startCellSize = 63f
-
-    private val _endCellSize = 189f
-
-    val cellSizeRange = _startCellSize.._endCellSize
-
-    var cellSize by mutableFloatStateOf(_startCellSize)
-
-    var canvasSize by mutableStateOf(Size.Zero)
-
-    var scale by mutableFloatStateOf(1f)
-
-    var offset by mutableStateOf(Offset.Zero)
-
-    fun toggleShowGrid() {
-        showGrid = !showGrid
-    }
-
-    fun boxSizeControllerIsVisible(): Boolean {
-        return scaleControllerBoxIsVisible || gridSizeControllerBoxIsVisible
-    }
 
     fun startSelectMap() {
         selectViewModel.startSelectMap()

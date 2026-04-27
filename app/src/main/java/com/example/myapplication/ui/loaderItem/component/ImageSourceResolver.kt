@@ -5,7 +5,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.main.model.UiViewModel
+import com.example.myapplication.ui.common.model.UiViewModel
 
 @Composable
 fun ImageSourceResolver(
