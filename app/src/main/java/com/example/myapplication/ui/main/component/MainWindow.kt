@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.main.component
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,7 +12,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.createItem.component.CreateItemDialog
+import com.example.myapplication.ui.drawer.component.ImageDrawer
+import com.example.myapplication.ui.main.model.UiViewModel
+import com.example.myapplication.ui.selectItem.component.SelectItemScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -29,12 +32,8 @@ fun MainWindow(
             ImageDrawer(viewModel)
         }
 
-        if (viewModel.isNeedOpenChipCreationScreen) {
-            ChipCreateDialog(viewModel)
-        }
-
-        if (viewModel.isNeedOpenMapCreationScreen) {
-            MapCreateDialog(viewModel)
+        if (viewModel.isNeedOpenItemCreationScreen) {
+            CreateItemDialog(viewModel)
         }
 
         if (viewModel.isNeedOpenSelectScreen) {

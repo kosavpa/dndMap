@@ -1,9 +1,10 @@
-package com.example.myapplication.ui.model
+package com.example.myapplication.ui.selectItem.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.ui.common.model.ImageType
 import okhttp3.internal.immutableListOf
 
 class SelectViewModel : ViewModel() {

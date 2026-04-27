@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.model
+package com.example.myapplication.ui.selectItem.model
 
 import android.net.Uri
 

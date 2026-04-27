@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.main.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
@@ -9,7 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.common.model.ImageType
+import com.example.myapplication.ui.main.model.UiViewModel
 
 @Composable
 fun MenuWindow(
@@ -75,7 +76,7 @@ fun MenuWindow(
 
                 },
             onClick = {
-                viewModel.startCreateMapScreen()
+                viewModel.startCreateItem(ImageType.MAP)
 
                 closeDrawer.invoke()
             },
@@ -96,7 +97,7 @@ fun MenuWindow(
                     top.linkTo(parent.top)
                 },
             onClick = {
-                viewModel.startCreateChip()
+                viewModel.startCreateItem(ImageType.CHIP)
 
                 closeDrawer.invoke()
             },

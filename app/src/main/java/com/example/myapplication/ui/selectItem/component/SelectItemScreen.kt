@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.selectItem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.rememberAsyncImagePainter
-import com.example.myapplication.ui.model.ImageType
-import com.example.myapplication.ui.model.UiViewModel
-import com.example.myapplication.ui.util.loadSelectFiles
+import com.example.myapplication.ui.common.model.ImageType
+import com.example.myapplication.ui.common.util.loadSelectFiles
+import com.example.myapplication.ui.main.model.UiViewModel
 
 @Composable
 fun SelectItemScreen(

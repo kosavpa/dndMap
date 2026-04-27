@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.loaderItem.component
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -12,17 +12,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.example.myapplication.ui.model.ImageType
-import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.main.model.UiViewModel
 
 @Composable
-fun ImgLoader(viewModel: UiViewModel, imgType: ImageType) {
+fun ImgLoader(viewModel: UiViewModel) {
     if (viewModel.isFromGallery) {
         val galleryLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri: Uri? ->
                 uri?.let {
-                    handleUri(viewModel, uri, imgType)
+                    handleUri(viewModel, uri)
                 }
             }
         )
@@ -49,7 +48,7 @@ fun ImgLoader(viewModel: UiViewModel, imgType: ImageType) {
                 Button(
                     {
                         if (tmpInternetUri.isNotBlank()) {
-                            handleUri(viewModel, tmpInternetUri.toUri(), imgType)
+                            handleUri(viewModel, tmpInternetUri.toUri())
                         }
                     }
                 ) {
@@ -60,6 +59,6 @@ fun ImgLoader(viewModel: UiViewModel, imgType: ImageType) {
     }
 }
 
-fun handleUri(viewModel: UiViewModel, uri: Uri, imgType: ImageType) {
-    viewModel.setLoadUri(imgType, uri)
+fun handleUri(viewModel: UiViewModel, uri: Uri) {
+    viewModel.setLoadUri(uri)
 }

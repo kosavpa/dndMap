@@ -1,11 +1,11 @@
-package com.example.myapplication.ui.components
+package com.example.myapplication.ui.loaderItem.component
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.model.UiViewModel
+import com.example.myapplication.ui.main.model.UiViewModel
 
 @Composable
 fun ImageSourceResolver(
