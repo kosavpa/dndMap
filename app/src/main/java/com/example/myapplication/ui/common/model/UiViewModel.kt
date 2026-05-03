@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.ui.createItem.model.CreateViewModel
 import com.example.myapplication.ui.drawer.model.DrawerViewModel
+import com.example.myapplication.ui.selectItem.model.Chip
 import com.example.myapplication.ui.selectItem.model.SelectItem
 import com.example.myapplication.ui.selectItem.model.SelectViewModel
 import okhttp3.internal.immutableListOf
@@ -83,7 +84,19 @@ class UiViewModel : ViewModel() {
             return selectViewModel.isNeedOpenSelectScreen
         }
 
-    var selectedItems by mutableStateOf(immutableListOf<SelectItem>())
+    var chips by mutableStateOf(immutableListOf<Chip>())
+
+    fun replaceChip(chip: Chip) {
+        val indexOfFirst = chips.indexOfFirst { it.uri == chip.uri }
+
+        if (indexOfFirst == -1) return
+
+        val toImmutableList = chips.toMutableList()
+
+        toImmutableList[indexOfFirst] = chip.copy()
+
+        chips = toImmutableList.toImmutableList()
+    }
 
     var scaleControllerBoxIsVisible by mutableStateOf(false)
 
@@ -123,9 +136,9 @@ class UiViewModel : ViewModel() {
         if (selectViewModel.imageLoadType == ImageType.MAP) {
             selectedMapUri = selectViewModel.itemsSelected().first().uri
 
-            selectedItems = immutableListOf()
+            chips = immutableListOf()
         } else {
-            selectedItems = selectViewModel.itemsSelected().toImmutableList()
+            chips = selectViewModel.itemsSelected().map { Chip(it.name, it.uri) }.toImmutableList()
         }
 
         finishSelectItemsParams()
