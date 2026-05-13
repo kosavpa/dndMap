@@ -121,10 +121,11 @@ fun ImageDrawer(viewModel: UiViewModel) {
 
         viewModel.chips.forEach { chip ->
             ChipToken(
-                chip = chip,
-                onDrag = { dragAmount ->
-                    viewModel.replaceChip(chip.apply { offset += dragAmount })
-                }
+                chip,
+                { dragAmount ->
+                    chip.apply { offset += dragAmount }
+                },
+                { viewModel.removeChip(chip) }
             )
         }
     }

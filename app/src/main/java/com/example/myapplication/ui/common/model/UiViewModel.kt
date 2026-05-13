@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.ui.createItem.model.CreateViewModel
 import com.example.myapplication.ui.drawer.model.DrawerViewModel
+import com.example.myapplication.ui.selectItem.enums.AdditionalIfoName
 import com.example.myapplication.ui.selectItem.model.Chip
 import com.example.myapplication.ui.selectItem.model.SelectItem
 import com.example.myapplication.ui.selectItem.model.SelectViewModel
@@ -98,6 +99,14 @@ class UiViewModel : ViewModel() {
         chips = toImmutableList.toImmutableList()
     }
 
+    fun removeChip(chip: Chip) {
+        val toImmutableList = chips.toMutableList()
+
+        toImmutableList.remove(chip)
+
+        chips = toImmutableList.toImmutableList()
+    }
+
     var scaleControllerBoxIsVisible by mutableStateOf(false)
 
     var gridSizeControllerBoxIsVisible by mutableStateOf(false)
@@ -138,7 +147,20 @@ class UiViewModel : ViewModel() {
 
             chips = immutableListOf()
         } else {
-            chips = selectViewModel.itemsSelected().map { Chip(it.name, it.uri) }.toImmutableList()
+            chips = selectViewModel.itemsSelected()
+                .map {
+                    val chip = Chip(it.name, it.uri, size = cellSize.toInt())
+
+                    it.additionalInfo.forEach { (name, any) ->
+                        when(name) {
+                            AdditionalIfoName.NAME -> chip.name = any as String
+                            AdditionalIfoName.HP -> chip.hp = any as Int
+                        }
+                    }
+
+                    chip
+                }
+                .toImmutableList()
         }
 
         finishSelectItemsParams()
@@ -244,9 +266,5 @@ class UiViewModel : ViewModel() {
 
     fun finishCreateItem() {
         createViewModel.finishCreateItem()
-    }
-
-    fun handleChipDrag(chip: Chip, dragAmount: Offset) {
-        replaceChip(chip.apply { offset += dragAmount })
     }
 }
