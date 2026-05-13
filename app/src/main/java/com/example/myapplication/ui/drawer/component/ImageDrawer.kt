@@ -21,11 +21,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.common.model.UiViewModel
+import com.example.myapplication.ui.selectItem.component.ChipToken
 import kotlin.math.floor
 
 @Composable
 fun ImageDrawer(viewModel: UiViewModel) {
-    checkNotNull(viewModel.selectedMapUri, {"Image uri is required!"})
+    checkNotNull(viewModel.selectedMapUri, { "Image uri is required!" })
 
     val painter = rememberAsyncImagePainter(
         viewModel.selectedMapUri
@@ -114,6 +115,15 @@ fun ImageDrawer(viewModel: UiViewModel) {
                 },
                 content = {
                     Icon(Icons.Filled.Add, "")
+                }
+            )
+        }
+
+        viewModel.chips.forEach { chip ->
+            ChipToken(
+                chip = chip,
+                onDrag = { dragAmount ->
+                    viewModel.replaceChip(chip.apply { offset += dragAmount })
                 }
             )
         }

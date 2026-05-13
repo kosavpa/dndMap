@@ -245,4 +245,8 @@ class UiViewModel : ViewModel() {
     fun finishCreateItem() {
         createViewModel.finishCreateItem()
     }
+
+    fun handleChipDrag(chip: Chip, dragAmount: Offset) {
+        replaceChip(chip.apply { offset += dragAmount })
+    }
 }
