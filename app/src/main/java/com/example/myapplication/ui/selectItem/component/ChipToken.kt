@@ -7,18 +7,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.selectItem.model.Chip
 import kotlin.math.roundToInt
@@ -31,9 +34,16 @@ fun ChipToken(
 ) {
     val sizeDelta = 5
 
+    val hpDelta = 1
+
     var isVisibleControlButtons by remember { mutableStateOf(false) }
 
+    var isVisibleHpChanger by remember { mutableStateOf(false) }
+
     val toggleVisibleControlButton = { isVisibleControlButtons = !isVisibleControlButtons }
+
+    var tmpHp by remember { mutableStateOf("") }
+
 
     Box(
         modifier = Modifier
@@ -45,50 +55,63 @@ fun ChipToken(
                 }
             }
     ) {
+        if (isVisibleHpChanger) {
+            AlertDialog(
+                onDismissRequest = { isVisibleHpChanger = false },
+                title = { Text(text = "Изменение ХП") },
+                text = {
+                    TextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = tmpHp,
+                        onValueChange = { tmpHp = it },
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        {
+                            if (
+                                tmpHp.isNotBlank()
+                                && tmpHp.isDigitsOnly()
+                                && tmpHp.toInt() != chip.hp
+                            ) {
+                                chip.hp = tmpHp.toInt()
+                            }
+
+                            isVisibleHpChanger = false
+                        }
+                    ) {
+                        Text("Ok", fontSize = 22.sp)
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        {
+                            isVisibleHpChanger = false
+                        }
+                    ) {
+                        Text("Отмена", fontSize = 22.sp)
+                    }
+                }
+            )
+        }
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             if (isVisibleControlButtons) {
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Row(
+                    horizontalArrangement = Arrangement.Center
                 ) {
-
-                    Row(
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-
-                        IconButton(onRemove) {
-                            Icon(Icons.Filled.Close, "Убрать фишку")
-                        }
-
-                        IconButton({ chip.size += sizeDelta }) {
-                            Icon(Icons.Filled.Add, "Увеличить фишку")
-                        }
-
-                        IconButton({ chip.size -= sizeDelta }) {
-                            Icon(Icons.Filled.Build, "Уменьшить фишку")
-                        }
+                    IconButton(onRemove) {
+                        Icon(Icons.Filled.Close, "Убрать фишку")
                     }
-
-                    Row(
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-
-                        IconButton(toggleVisibleControlButton) {
-                            Icon(Icons.Filled.ArrowDropDown, "Скрыть меню")
-                        }
-
-                        IconButton(onRemove) {
-                            Icon(Icons.Filled.AccountBox, "ХП +")
-                        }
-
-                        IconButton(onRemove) {
-                            Icon(Icons.Filled.DateRange, "ХП -")
-                        }
+                    IconButton({ chip.size += sizeDelta }) {
+                        Icon(Icons.Filled.Add, "Увеличить фишку")
+                    }
+                    IconButton({ chip.size -= sizeDelta }) {
+                        Icon(Icons.Filled.Build, "Уменьшить фишку")
                     }
                 }
             }
@@ -107,11 +130,40 @@ fun ChipToken(
                 modifier = Modifier.padding(8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(chip.name)
+                Text(
+                    chip.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = FontStyle.Normal
+                )
 
                 Spacer(Modifier.width(8.dp))
 
-                Text(chip.hp.toString())
+                Text(
+                    chip.hp.toString(),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = FontStyle.Normal,
+                    color = Color.Red,
+                    modifier = Modifier.clickable {
+                        isVisibleHpChanger = true
+                    }
+                )
+            }
+            if (isVisibleControlButtons) {
+                Row(
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    IconButton(toggleVisibleControlButton) {
+                        Icon(Icons.Filled.ArrowDropDown, "Скрыть меню")
+                    }
+                    IconButton({ chip.hp += hpDelta }) {
+                        Icon(Icons.Filled.AccountBox, "ХП +")
+                    }
+                    IconButton({ chip.hp -= hpDelta }) {
+                        Icon(Icons.Filled.DateRange, "ХП -")
+                    }
+                }
             }
         }
     }
