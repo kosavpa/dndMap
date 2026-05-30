@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.selectItem.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
@@ -54,6 +55,8 @@ fun ChipToken(
                     onDrag(dragAmount)
                 }
             }
+            .background(Color.Black.copy(alpha = 0.2f), CircleShape)
+            .wrapContentSize(Alignment.Center)
     ) {
         if (isVisibleHpChanger) {
             AlertDialog(
@@ -95,18 +98,15 @@ fun ChipToken(
             )
         }
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (isVisibleControlButtons) {
-                Row(
-                    horizontalArrangement = Arrangement.Center
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    IconButton(onRemove) {
-                        Icon(Icons.Filled.Close, "Убрать фишку")
-                    }
                     IconButton({ chip.size += sizeDelta }) {
                         Icon(Icons.Filled.Add, "Увеличить фишку")
                     }
@@ -116,47 +116,59 @@ fun ChipToken(
                 }
             }
 
-            Image(
-                modifier = Modifier
-                    .clickable { toggleVisibleControlButton() }
-                    .size(chip.size.dp)
-                    .clip(CircleShape),
-                painter = rememberAsyncImagePainter(chip.uri),
-                contentDescription = chip.name,
-                contentScale = ContentScale.Crop
-            )
 
-            Row(
-                modifier = Modifier.padding(8.dp),
-                horizontalArrangement = Arrangement.Center
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    chip.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Normal
-                )
 
-                Spacer(Modifier.width(8.dp))
-
-                Text(
-                    chip.hp.toString(),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Normal,
-                    color = Color.Red,
-                    modifier = Modifier.clickable {
-                        isVisibleHpChanger = true
+                if (isVisibleControlButtons) {
+                    IconButton(onRemove) {
+                        Icon(Icons.Filled.Close, "Убрать фишку")
                     }
+                }
+
+                Image(
+                    modifier = Modifier
+                        .clickable { toggleVisibleControlButton() }
+                        .size(chip.size.dp)
+                        .clip(CircleShape),
+                    painter = rememberAsyncImagePainter(chip.uri),
+                    contentDescription = chip.name,
+                    contentScale = ContentScale.Crop
                 )
-            }
-            if (isVisibleControlButtons) {
+
                 Row(
+                    modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    IconButton(toggleVisibleControlButton) {
-                        Icon(Icons.Filled.ArrowDropDown, "Скрыть меню")
-                    }
+                    Text(
+                        chip.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontStyle = FontStyle.Normal
+                    )
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Text(
+                        chip.hp.toString(),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontStyle = FontStyle.Normal,
+                        color = Color.Red,
+                        modifier = Modifier.clickable {
+                            isVisibleHpChanger = true
+                        }
+                    )
+                }
+            }
+
+            if (isVisibleControlButtons) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
                     IconButton({ chip.hp += hpDelta }) {
                         Icon(Icons.Filled.AccountBox, "ХП +")
                     }
