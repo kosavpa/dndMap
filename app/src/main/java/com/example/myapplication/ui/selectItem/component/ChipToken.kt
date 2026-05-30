@@ -7,7 +7,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,6 +17,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.R
 import com.example.myapplication.ui.selectItem.model.Chip
 import kotlin.math.roundToInt
 
@@ -108,10 +110,20 @@ fun ChipToken(
                     verticalArrangement = Arrangement.Center
                 ) {
                     IconButton({ chip.size += sizeDelta }) {
-                        Icon(Icons.Filled.Add, "Увеличить фишку")
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(R.drawable.zoom_in),
+                            contentDescription = "Увеличить фишку",
+                            tint = Color.Unspecified
+                        )
                     }
                     IconButton({ chip.size -= sizeDelta }) {
-                        Icon(Icons.Filled.Build, "Уменьшить фишку")
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(R.drawable.zoom_out),
+                            contentDescription = "Уменьшить фишку",
+                            tint = Color.Unspecified
+                        )
                     }
                 }
             }
@@ -124,7 +136,12 @@ fun ChipToken(
 
                 if (isVisibleControlButtons) {
                     IconButton(onRemove) {
-                        Icon(Icons.Filled.Close, "Убрать фишку")
+                        Icon(
+                            Icons.Filled.Close,
+                            modifier = Modifier.size(32.dp),
+                            contentDescription = "Убрать фишку",
+                            tint = Color.Unspecified
+                        )
                     }
                 }
 
@@ -138,30 +155,25 @@ fun ChipToken(
                     contentScale = ContentScale.Crop
                 )
 
-                Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        chip.name,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontStyle = FontStyle.Normal
-                    )
+                Text(
+                    chip.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = FontStyle.Normal
+                )
 
-                    Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(8.dp))
 
-                    Text(
-                        chip.hp.toString(),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontStyle = FontStyle.Normal,
-                        color = Color.Red,
-                        modifier = Modifier.clickable {
-                            isVisibleHpChanger = true
-                        }
-                    )
-                }
+                Text(
+                    chip.hp.toString(),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontStyle = FontStyle.Normal,
+                    color = Color.Red,
+                    modifier = Modifier.clickable {
+                        isVisibleHpChanger = true
+                    }
+                )
             }
 
             if (isVisibleControlButtons) {
@@ -170,10 +182,20 @@ fun ChipToken(
                     verticalArrangement = Arrangement.Center
                 ) {
                     IconButton({ chip.hp += hpDelta }) {
-                        Icon(Icons.Filled.AccountBox, "ХП +")
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(R.drawable.favorite_p),
+                            contentDescription = "ХП +",
+                            tint = Color.Unspecified
+                        )
                     }
                     IconButton({ chip.hp -= hpDelta }) {
-                        Icon(Icons.Filled.DateRange, "ХП -")
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(R.drawable.favorite_m),
+                            contentDescription = "ХП -",
+                            tint = Color.Unspecified
+                        )
                     }
                 }
             }
