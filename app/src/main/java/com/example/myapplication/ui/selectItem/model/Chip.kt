@@ -25,14 +25,4 @@ class Chip {
         this.size = size
         this.hp = 0
     }
-
-    fun copy(): Chip {
-        val chip = Chip(name, uri, size)
-
-        chip.hp = hp
-
-        chip.offset = offset
-
-        return chip
-    }
 }

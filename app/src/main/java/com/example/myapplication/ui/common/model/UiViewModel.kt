@@ -65,6 +65,30 @@ class UiViewModel : ViewModel() {
         return drawerViewModel.boxSizeControllerIsVisible()
     }
 
+    var scaleControllerBoxIsVisible: Boolean
+        get() {
+            return drawerViewModel.scaleControllerBoxIsVisible
+        }
+        set(value) {
+            drawerViewModel.scaleControllerBoxIsVisible = value
+        }
+
+    var gridSizeControllerBoxIsVisible: Boolean
+        get() {
+            return drawerViewModel.gridSizeControllerBoxIsVisible
+        }
+        set(value) {
+            drawerViewModel.gridSizeControllerBoxIsVisible = value
+        }
+
+    var showGrid: Boolean
+        get() {
+            return drawerViewModel.showGrid
+        }
+        set(value) {
+            drawerViewModel.showGrid = value
+        }
+
     val selectViewModel = SelectViewModel()
 
     val lazyLoadedItems: Int
@@ -87,18 +111,6 @@ class UiViewModel : ViewModel() {
 
     var chips by mutableStateOf(immutableListOf<Chip>())
 
-    fun replaceChip(chip: Chip) {
-        val indexOfFirst = chips.indexOfFirst { it.uri == chip.uri }
-
-        if (indexOfFirst == -1) return
-
-        val toImmutableList = chips.toMutableList()
-
-        toImmutableList[indexOfFirst] = chip.copy()
-
-        chips = toImmutableList.toImmutableList()
-    }
-
     fun removeChip(chip: Chip) {
         val toImmutableList = chips.toMutableList()
 
@@ -106,12 +118,6 @@ class UiViewModel : ViewModel() {
 
         chips = toImmutableList.toImmutableList()
     }
-
-    var scaleControllerBoxIsVisible by mutableStateOf(false)
-
-    var gridSizeControllerBoxIsVisible by mutableStateOf(false)
-
-    var showGrid by mutableStateOf(false)
 
     var imageLoadType: ImageType?
         get() {
@@ -152,7 +158,7 @@ class UiViewModel : ViewModel() {
                     val chip = Chip(it.name, it.uri, size = cellSize.toInt())
 
                     it.additionalInfo.forEach { (name, any) ->
-                        when(name) {
+                        when (name) {
                             AdditionalIfoName.NAME -> chip.name = any as String
                             AdditionalIfoName.HP -> chip.hp = any as Int
                         }
@@ -266,5 +272,9 @@ class UiViewModel : ViewModel() {
 
     fun finishCreateItem() {
         createViewModel.finishCreateItem()
+    }
+
+    fun deleteFromLoad(deleted: SelectItem) {
+        loadedSelectItems = loadedSelectItems.filter { it.uri != deleted.uri }.toImmutableList()
     }
 }

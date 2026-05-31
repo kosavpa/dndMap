@@ -3,6 +3,7 @@ package com.example.myapplication.ui.common.util
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.example.myapplication.ui.common.model.UiViewModel
 import com.example.myapplication.ui.selectItem.model.SelectItem
@@ -19,10 +20,6 @@ import kotlin.io.path.exists
 
 @RequiresApi(Build.VERSION_CODES.O)
 suspend fun save(context: Context, viewModel: UiViewModel) {
-    checkNotNull(viewModel.imageLoadType) { "Image type is required!" }
-    checkNotNull(viewModel.imgLoadUri) { "Image uri is required!" }
-    checkNotNull(viewModel.imageName) { "Image name is required!" }
-
     val dir = File(context.filesDir, viewModel.imageLoadType!!.name)
 
     if (!dir.exists()) {
@@ -44,6 +41,19 @@ suspend fun save(context: Context, viewModel: UiViewModel) {
             URL(viewModel.imgLoadUri.toString()).openStream()?.use { input ->
                 copyFromIS(input, imagePath)
             }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+suspend fun delete(item: SelectItem) {
+    item.uri
+
+    withContext(Dispatchers.IO) {
+        val file = item.uri.toFile()
+
+        if (file.exists()) {
+            Files.delete(file.toPath())
         }
     }
 }

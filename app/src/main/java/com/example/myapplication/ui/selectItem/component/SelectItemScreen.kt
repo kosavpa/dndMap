@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.selectItem.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,9 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,8 +30,11 @@ import androidx.compose.ui.window.DialogProperties
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.common.model.ImageType
 import com.example.myapplication.ui.common.model.UiViewModel
+import com.example.myapplication.ui.common.util.delete
 import com.example.myapplication.ui.common.util.loadSelectFiles
+import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SelectItemScreen(
     viewModel: UiViewModel
@@ -38,6 +44,8 @@ fun SelectItemScreen(
     val listState = rememberLazyListState()
 
     var trackHeightPx by remember { mutableIntStateOf(0) }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val scrollProgress by remember {
         derivedStateOf {
@@ -83,9 +91,10 @@ fun SelectItemScreen(
             Box(modifier = Modifier.fillMaxSize()) {
                 LazyColumn(state = listState) {
                     items(viewModel.loadedSelectItems) {
-                        Column(
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
-                                .fillMaxSize()
                                 .background(
                                     if (itemToSelectedMap[it]!!.value) Color.Red else Color.Transparent,
                                     shape = RoundedCornerShape(20.dp)
@@ -106,25 +115,51 @@ fun SelectItemScreen(
                                     } else {
                                         viewModel.removeSelectedItem(it)
                                     }
-                                },
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                                }
+                                .fillMaxSize()
                         ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(model = it.uri),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                            )
-                            Row(horizontalArrangement = Arrangement.SpaceEvenly) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(model = it.uri),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .clip(RoundedCornerShape(16.dp))
+                                )
+
+                                Spacer(Modifier.width(20.dp))
+
                                 Text(
                                     modifier = Modifier.padding(4.dp),
                                     text = it.name,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                     fontSize = 24.sp
                                 )
                             }
+
+                            IconButton(
+                                modifier = Modifier
+                                    .padding(0.dp, 0.dp, 28.dp, 0.dp)
+                                    .size(32.dp),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        delete(it)
+
+                                        viewModel.deleteFromLoad(it)
+                                    }
+                                },
+                                content = {
+                                    Icon(
+                                        Icons.Filled.Delete,
+                                        "Удалить"
+                                    )
+                                }
+                            )
                         }
                     }
                 }
