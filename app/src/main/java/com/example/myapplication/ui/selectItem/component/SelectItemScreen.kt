@@ -47,6 +47,8 @@ fun SelectItemScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val density = LocalDensity.current
+
     val scrollProgress by remember {
         derivedStateOf {
             val firstVisibleItem = listState.firstVisibleItemIndex
@@ -191,7 +193,7 @@ fun SelectItemScreen(
         confirmButton = {
             Button(
                 {
-                    viewModel.itemsSelected()
+                    viewModel.itemsSelected(density)
                 }
             ) { Text("Ок", fontSize = 22.sp) }
         },

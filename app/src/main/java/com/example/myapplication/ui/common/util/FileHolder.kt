@@ -89,8 +89,13 @@ fun loadSelectFiles(context: Context, viewModel: UiViewModel) {
                 .toList()
         )
     } else {
+        val existedIds = toMutableList.map { it.id }.toList()
+
         toMutableList.addAll(
-            fileNames.map { createSelectItem(it, dir) }
+            fileNames
+                .filter { !existedIds.contains(it) }
+                .map { createSelectItem(it, dir) }
+                .toList()
         )
     }
 
@@ -100,6 +105,7 @@ fun loadSelectFiles(context: Context, viewModel: UiViewModel) {
 fun createSelectItem(name: String, dir: File): SelectItem {
     return SelectItem(
         name.split(FILE_SEPARATOR)[0],
+        name,
         File(dir, name).toUri()
     )
 }

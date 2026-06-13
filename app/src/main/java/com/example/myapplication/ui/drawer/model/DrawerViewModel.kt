@@ -30,6 +30,8 @@ class DrawerViewModel : ViewModel() {
 
     var offset by mutableStateOf(Offset.Zero)
 
+    var offsetPermitted by mutableStateOf(false)
+
     fun toggleShowGrid() {
         showGrid = !showGrid
     }

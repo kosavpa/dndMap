@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,7 +41,9 @@ fun ImageDrawer(viewModel: UiViewModel) {
                     detectTransformGestures(
                         true
                     ) { _, pan, _, _ ->
-                        viewModel.offset += pan
+                        if (viewModel.offsetPermitted) {
+                            viewModel.offset += pan
+                        }
                     }
                 }
         ) {
@@ -96,6 +99,20 @@ fun ImageDrawer(viewModel: UiViewModel) {
         }
 
         Column(Modifier.align(Alignment.BottomStart)) {
+            IconButton(
+                modifier = Modifier.align(Alignment.Start),
+                onClick = {
+                    viewModel.offsetPermitted = !viewModel.offsetPermitted
+                },
+                content = {
+                    Icon(
+                        Icons.Filled.Lock,
+                        "",
+                        tint = Color.Black.copy(alpha = if (viewModel.offsetPermitted) 1f else 0.7f)
+                    )
+                }
+            )
+
             IconButton(
                 modifier = Modifier.align(Alignment.Start),
                 onClick = {

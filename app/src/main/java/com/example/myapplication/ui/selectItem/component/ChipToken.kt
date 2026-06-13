@@ -35,7 +35,7 @@ fun ChipToken(
     onDrag: (Offset) -> Unit,
     onRemove: () -> Unit
 ) {
-    val sizeDelta = 5
+    val sizeDelta = 5.dp
 
     val hpDelta = 1
 
@@ -109,7 +109,7 @@ fun ChipToken(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    IconButton({ chip.size += sizeDelta }) {
+                    IconButton({ chip.baseSize += sizeDelta }) {
                         Icon(
                             modifier = Modifier.size(32.dp),
                             painter = painterResource(R.drawable.zoom_in),
@@ -117,7 +117,7 @@ fun ChipToken(
                             tint = Color.Unspecified
                         )
                     }
-                    IconButton({ chip.size -= sizeDelta }) {
+                    IconButton({ chip.baseSize -= sizeDelta }) {
                         Icon(
                             modifier = Modifier.size(32.dp),
                             painter = painterResource(R.drawable.zoom_out),
@@ -148,7 +148,7 @@ fun ChipToken(
                 Image(
                     modifier = Modifier
                         .clickable { toggleVisibleControlButton() }
-                        .size(chip.size.dp)
+                        .size(chip.size)
                         .clip(CircleShape),
                     painter = rememberAsyncImagePainter(chip.uri),
                     contentDescription = chip.name,

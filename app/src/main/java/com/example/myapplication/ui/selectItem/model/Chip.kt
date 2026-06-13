@@ -6,23 +6,24 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.Dp
 
 
-class Chip {
-    var name: String
+class Chip(
+    var id: String,
+    var name: String,
+    var uri: Uri,
+    baseSize: Dp,
+    private val scaleProvider: () -> Float,
+    private val gridSizeProvider: () -> Dp
+) {
 
-    val uri: Uri
+    var baseSize by mutableStateOf(baseSize)
 
-    var size by mutableIntStateOf(0)
+    val size: Dp
+        get() = ((baseSize + (gridSizeProvider() - baseSize)) * scaleProvider())
 
     var hp by mutableIntStateOf(0)
 
     var offset by mutableStateOf(Offset.Zero)
-
-    constructor(name: String, uri: Uri, size: Int) {
-        this.name = name
-        this.uri = uri
-        this.size = size
-        this.hp = 0
-    }
 }

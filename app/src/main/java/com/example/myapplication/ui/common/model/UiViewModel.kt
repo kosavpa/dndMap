@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.ui.createItem.model.CreateViewModel
 import com.example.myapplication.ui.drawer.model.DrawerViewModel
@@ -55,6 +56,14 @@ class UiViewModel : ViewModel() {
         }
         set(value) {
             drawerViewModel.offset = value
+        }
+
+    var offsetPermitted: Boolean
+        get() {
+            return drawerViewModel.offsetPermitted
+        }
+        set(value) {
+            drawerViewModel.offsetPermitted = value
         }
 
     fun toggleShowGrid() {
@@ -147,7 +156,7 @@ class UiViewModel : ViewModel() {
         selectViewModel.startSelectMap()
     }
 
-    fun itemsSelected() {
+    fun itemsSelected(density: Density) {
         if (selectViewModel.imageLoadType == ImageType.MAP) {
             selectedMapUri = selectViewModel.itemsSelected().first().uri
 
@@ -155,7 +164,14 @@ class UiViewModel : ViewModel() {
         } else {
             chips = selectViewModel.itemsSelected()
                 .map {
-                    val chip = Chip(it.name, it.uri, size = cellSize.toInt())
+                    val chip = Chip(
+                        it.id,
+                        it.name,
+                        it.uri,
+                        with(density) { cellSize.toDp() },
+                        { scale }
+                    )
+                    { with(density) { cellSize.toDp() } }
 
                     it.additionalInfo.forEach { (name, any) ->
                         when (name) {
