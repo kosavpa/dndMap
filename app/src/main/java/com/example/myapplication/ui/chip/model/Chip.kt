@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.selectItem.model
+package com.example.myapplication.ui.chip.model
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
-
 
 class Chip(
     var id: String,
@@ -25,5 +24,5 @@ class Chip(
 
     var hp by mutableIntStateOf(0)
 
-    var offset by mutableStateOf(Offset.Zero)
+    var offset by mutableStateOf(Offset.Companion.Zero)
 }

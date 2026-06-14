@@ -8,10 +8,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.Density
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.ui.chip.enums.AdditionalIfoName
+import com.example.myapplication.ui.chip.model.Chip
 import com.example.myapplication.ui.createItem.model.CreateViewModel
 import com.example.myapplication.ui.drawer.model.DrawerViewModel
-import com.example.myapplication.ui.selectItem.enums.AdditionalIfoName
-import com.example.myapplication.ui.selectItem.model.Chip
 import com.example.myapplication.ui.selectItem.model.SelectItem
 import com.example.myapplication.ui.selectItem.model.SelectViewModel
 import okhttp3.internal.immutableListOf

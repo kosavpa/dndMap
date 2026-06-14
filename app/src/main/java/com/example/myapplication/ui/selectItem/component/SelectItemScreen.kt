@@ -83,6 +83,12 @@ fun SelectItemScreen(
     val itemToSelectedMap = viewModel.loadedSelectItems
         .associateWith { remember { mutableStateOf(false) } }
 
+    val itemToCountMap = viewModel.loadedSelectItems
+        .associateWith { remember { mutableStateOf(1) } }
+
+    val itemToNameMap = viewModel.loadedSelectItems
+        .associateWith { remember { mutableStateOf(it.name) } }
+
     AlertDialog(
         modifier = Modifier
             .width(600.dp)
@@ -142,6 +148,14 @@ fun SelectItemScreen(
                                     overflow = TextOverflow.Ellipsis,
                                     fontSize = 24.sp
                                 )
+
+                                if (viewModel.imageLoadType == ImageType.CHIP) {
+                                    TextField(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        value = itemToNameMap[it]!!.value,
+                                        onValueChange = { name: String -> itemToNameMap[it]!!.value = name }
+                                    )
+                                }
                             }
 
                             IconButton(

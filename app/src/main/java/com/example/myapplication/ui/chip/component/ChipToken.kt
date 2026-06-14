@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.selectItem.component
+package com.example.myapplication.ui.chip.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import coil3.compose.rememberAsyncImagePainter
 import com.example.myapplication.R
-import com.example.myapplication.ui.selectItem.model.Chip
+import com.example.myapplication.ui.chip.model.Chip
 import kotlin.math.roundToInt
 
 @Composable

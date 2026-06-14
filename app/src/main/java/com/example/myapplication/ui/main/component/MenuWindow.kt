@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.main.component
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -17,7 +18,9 @@ fun MenuWindow(
     closeDrawer: () -> Unit,
     viewModel: UiViewModel
 ) {
-    ConstraintLayout {
+    ConstraintLayout(Modifier.fillMaxSize()) {
+        Banner(0.1f)
+
         val (button1, button2, button3, button4, button5) = createRefs()
 
         createVerticalChain(button1, button2, button3, button4, button5)
@@ -37,7 +40,7 @@ fun MenuWindow(
                 closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.LightGray,
+                contentColor = Color.White,
                 containerColor = Color.Transparent
             )
         ) {
@@ -59,7 +62,7 @@ fun MenuWindow(
                 closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.LightGray,
+                contentColor = Color.White,
                 containerColor = Color.Transparent
             )
         ) {
@@ -81,7 +84,7 @@ fun MenuWindow(
                 closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.LightGray,
+                contentColor = Color.White,
                 containerColor = Color.Transparent
             )
         ) {
@@ -102,7 +105,7 @@ fun MenuWindow(
                 closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.LightGray,
+                contentColor = Color.White,
                 containerColor = Color.Transparent
             )
         ) {
@@ -123,7 +126,7 @@ fun MenuWindow(
                 closeDrawer.invoke()
             },
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.LightGray,
+                contentColor = Color.White,
                 containerColor = Color.Transparent
             )
         ) {

@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.ui.chip.component.ChipToken
 import com.example.myapplication.ui.common.model.UiViewModel
-import com.example.myapplication.ui.selectItem.component.ChipToken
 import kotlin.math.floor
 
 @Composable

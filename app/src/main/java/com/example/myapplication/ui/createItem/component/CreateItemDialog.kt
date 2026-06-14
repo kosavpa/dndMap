@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -106,7 +105,6 @@ fun CreateItemDialog(
                             Modifier
                                 .size(100.dp)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Color.Red)
                                 .border(
                                     BorderStroke(4.dp, Color.Black),
                                     CircleShape
