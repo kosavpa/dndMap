@@ -10,8 +10,6 @@ import okhttp3.internal.immutableListOf
 class SelectViewModel : ViewModel() {
     var loadedSelectItems by mutableStateOf(immutableListOf<SelectItem>())
 
-    var itemsToSelect = mutableListOf<SelectItem>()
-
     val lazyLoadedItems = 8
 
     var isNeedOpenSelectScreen by mutableStateOf(false)
@@ -25,7 +23,9 @@ class SelectViewModel : ViewModel() {
     }
 
     fun itemsSelected(): MutableList<SelectItem> {
-        val selected = itemsToSelect.toMutableList()
+        val selected = loadedSelectItems
+            .filter { it.isSelected }
+            .toMutableList()
 
         finishSelectItemsParams()
 
@@ -44,19 +44,5 @@ class SelectViewModel : ViewModel() {
         imageLoadType = null
 
         isNeedOpenSelectScreen = false
-
-        itemsToSelect.clear()
-    }
-
-    fun addSelectItem(item: SelectItem) {
-        if (imageLoadType == ImageType.MAP) {
-            itemsToSelect.clear()
-        }
-
-        itemsToSelect.add(item)
-    }
-
-    fun removeSelectedItem(item: SelectItem) {
-        itemsToSelect.remove(item)
     }
 }

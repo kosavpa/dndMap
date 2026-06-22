@@ -163,24 +163,28 @@ class UiViewModel : ViewModel() {
             chips = immutableListOf()
         } else {
             chips = selectViewModel.itemsSelected()
-                .map {
-                    val chip = Chip(
-                        it.id,
-                        it.name,
-                        it.uri,
-                        with(density) { cellSize.toDp() },
-                        { scale }
-                    )
-                    { with(density) { cellSize.toDp() } }
+                .flatMap {
+                    mutableListOf<Chip>().apply {
+                        (1..it.count).forEach { i ->
+                            val chip = Chip(
+                                "${it.id}$i",
+                                "${it.name} $i",
+                                it.uri,
+                                with(density) { cellSize.toDp() },
+                                { scale }
+                            )
+                            { with(density) { cellSize.toDp() } }
 
-                    it.additionalInfo.forEach { (name, any) ->
-                        when (name) {
-                            AdditionalIfoName.NAME -> chip.name = any as String
-                            AdditionalIfoName.HP -> chip.hp = any as Int
+                            it.additionalInfo.forEach { (name, any) ->
+                                when (name) {
+                                    AdditionalIfoName.NAME -> chip.name = any as String
+                                    AdditionalIfoName.HP -> chip.hp = any as Int
+                                }
+                            }
+
+                            this.add(chip)
                         }
                     }
-
-                    chip
                 }
                 .toImmutableList()
         }
@@ -194,14 +198,6 @@ class UiViewModel : ViewModel() {
 
     fun finishSelectItemsParams() {
         selectViewModel.finishSelectItemsParams()
-    }
-
-    fun addSelectItem(item: SelectItem) {
-        selectViewModel.addSelectItem(item)
-    }
-
-    fun removeSelectedItem(item: SelectItem) {
-        selectViewModel.removeSelectedItem(item)
     }
 
     val createViewModel = CreateViewModel()
