@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.main.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
@@ -13,6 +15,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.myapplication.ui.common.model.ImageType
 import com.example.myapplication.ui.common.model.UiViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MenuWindow(
     closeDrawer: () -> Unit,
