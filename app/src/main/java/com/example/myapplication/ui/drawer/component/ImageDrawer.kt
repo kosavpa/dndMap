@@ -5,7 +5,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -19,8 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import com.example.myapplication.R
 import com.example.myapplication.ui.chip.component.ChipToken
 import com.example.myapplication.ui.common.model.UiViewModel
 import kotlin.math.floor
@@ -116,6 +117,19 @@ fun ImageDrawer(viewModel: UiViewModel) {
             IconButton(
                 modifier = Modifier.align(Alignment.Start),
                 onClick = {
+                    viewModel.offset = Offset(0f, 0f)
+                },
+                content = {
+                    Icon(
+                        painterResource(R.drawable.refresh_map),
+                        ""
+                    )
+                }
+            )
+
+            IconButton(
+                modifier = Modifier.align(Alignment.Start),
+                onClick = {
                     viewModel.scaleControllerBoxIsVisible =
                         !viewModel.scaleControllerBoxIsVisible
                 },
@@ -131,7 +145,7 @@ fun ImageDrawer(viewModel: UiViewModel) {
                         !viewModel.gridSizeControllerBoxIsVisible
                 },
                 content = {
-                    Icon(Icons.Filled.Add, "")
+                    Icon(painterResource(R.drawable.grid), "")
                 }
             )
         }

@@ -95,7 +95,7 @@ fun SelectItemScreen(
                     items(viewModel.loadedSelectItems, key = { it.id }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
+                            horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
                                 .background(
                                     if (it.isSelected) Color.LightGray else Color.Transparent,
@@ -104,164 +104,164 @@ fun SelectItemScreen(
                                 .padding(4.dp)
                                 .fillMaxSize()
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Image(
-                                    painter = rememberAsyncImagePainter(model = it.uri),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .clip(RoundedCornerShape(16.dp))
-                                )
+                            Image(
+                                painter = rememberAsyncImagePainter(model = it.uri),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
 
-                                Spacer(Modifier.width(20.dp))
+                            Spacer(Modifier.width(20.dp))
 
-                                IconButton(
-                                    {
-                                        if (viewModel.imageLoadType == ImageType.MAP) {
-                                            viewModel.loadedSelectItems.forEach { anyItem ->
-                                                anyItem.isSelected = anyItem.id == it.id
-                                            }
-                                        } else {
-                                            it.isSelected = !it.isSelected
+                            IconButton(
+                                {
+                                    if (viewModel.imageLoadType == ImageType.MAP) {
+                                        viewModel.loadedSelectItems.forEach { anyItem ->
+                                            anyItem.isSelected = anyItem.id == it.id
                                         }
+                                    } else {
+                                        it.isSelected = !it.isSelected
                                     }
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .size(32.dp)
-                                            .background(
-                                                if (it.isSelected) Color.Blue.copy(alpha = 0.4f) else Color.DarkGray.copy(
-                                                    alpha = 0.2f
-                                                ),
-                                                shape = RoundedCornerShape(20.dp)
-                                            ),
-                                        imageVector = Icons.Default.Check,
-                                        contentDescription = ""
-                                    )
                                 }
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .background(
+                                            if (it.isSelected) Color.Blue.copy(alpha = 0.4f) else Color.DarkGray.copy(
+                                                alpha = 0.2f
+                                            ),
+                                            shape = RoundedCornerShape(20.dp)
+                                        ),
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = ""
+                                )
+                            }
 
-                                Spacer(Modifier.width(20.dp))
+                            Spacer(Modifier.width(20.dp))
 
-                                if (viewModel.imageLoadType == ImageType.CHIP) {
-                                    Column {
-                                        Row(
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            TextField(
+                            if (viewModel.imageLoadType == ImageType.CHIP) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        TextField(
+                                            modifier = Modifier
+                                                .background(
+                                                    Color.DarkGray.copy(alpha = 0.2f),
+                                                    shape = RoundedCornerShape(20.dp)
+                                                ),
+                                            value = it.name,
+                                            onValueChange = { name: String ->
+                                                if (name.isNotBlank()) {
+                                                    it.name = name
+                                                }
+                                            },
+                                            textStyle = LocalTextStyle.current.copy(
+                                                fontSize = 24.sp,
+                                                textAlign = TextAlign.Center
+                                            )
+                                        )
+                                    }
+
+                                    Spacer(Modifier.width(20.dp))
+
+                                    Row(
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        IconButton({ it.count-- }) {
+                                            Icon(
                                                 modifier = Modifier
+                                                    .size(32.dp)
                                                     .background(
                                                         Color.DarkGray.copy(alpha = 0.2f),
                                                         shape = RoundedCornerShape(20.dp)
                                                     ),
-                                                value = it.name,
-                                                onValueChange = { name: String ->
-                                                    if (name.isNotBlank()) {
-                                                        it.name = name
-                                                    }
-                                                },
-                                                textStyle = LocalTextStyle.current.copy(
-                                                    fontSize = 24.sp,
-                                                    textAlign = TextAlign.Center
-                                                )
+                                                imageVector = Icons.Default.Clear,
+                                                contentDescription = ""
                                             )
                                         }
 
                                         Spacer(Modifier.width(20.dp))
 
-                                        Row(
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            IconButton({ it.count-- }) {
-                                                Icon(
-                                                    modifier = Modifier
-                                                        .size(32.dp)
-                                                        .background(
-                                                            Color.DarkGray.copy(alpha = 0.2f),
-                                                            shape = RoundedCornerShape(20.dp)
-                                                        ),
-                                                    imageVector = Icons.Default.Clear,
-                                                    contentDescription = ""
-                                                )
-                                            }
+                                        Text(
+                                            modifier = Modifier
+                                                .width(20.dp)
+                                                .background(
+                                                    Color.DarkGray.copy(alpha = 0.2f),
+                                                    shape = RoundedCornerShape(20.dp)
+                                                ),
+                                            text = it.count.toString(),
+                                            textAlign = TextAlign.Center,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            fontSize = 24.sp
+                                        )
 
-                                            Spacer(Modifier.width(20.dp))
+                                        Spacer(Modifier.width(20.dp))
 
-                                            Text(
+                                        IconButton({ it.count++ }) {
+                                            Icon(
                                                 modifier = Modifier
-                                                    .width(20.dp)
+                                                    .size(32.dp)
                                                     .background(
                                                         Color.DarkGray.copy(alpha = 0.2f),
                                                         shape = RoundedCornerShape(20.dp)
                                                     ),
-                                                text = it.count.toString(),
-                                                textAlign = TextAlign.Center,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                fontSize = 24.sp
+                                                imageVector = Icons.Default.Add,
+                                                contentDescription = ""
                                             )
-
-                                            Spacer(Modifier.width(20.dp))
-
-                                            IconButton({ it.count++ }) {
-                                                Icon(
-                                                    modifier = Modifier
-                                                        .size(32.dp)
-                                                        .background(
-                                                            Color.DarkGray.copy(alpha = 0.2f),
-                                                            shape = RoundedCornerShape(20.dp)
-                                                        ),
-                                                    imageVector = Icons.Default.Add,
-                                                    contentDescription = ""
-                                                )
-                                            }
                                         }
                                     }
-                                } else {
-                                    Text(
-                                        modifier = Modifier
-                                            .padding(4.dp)
-                                            .background(
-                                                Color.DarkGray.copy(alpha = 0.2f),
-                                                shape = RoundedCornerShape(20.dp)
-                                            ),
-                                        textAlign = TextAlign.Center,
-                                        text = it.name,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontSize = 24.sp
-                                    )
                                 }
 
-                                IconButton(
+                                Spacer(Modifier.weight(1f))
+                            } else {
+                                Text(
                                     modifier = Modifier
-                                        .padding(0.dp, 0.dp, 28.dp, 0.dp)
+                                        .padding(4.dp)
+                                        .weight(1f)
                                         .background(
                                             Color.DarkGray.copy(alpha = 0.2f),
                                             shape = RoundedCornerShape(20.dp)
-                                        )
-                                        .size(32.dp),
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            delete(it)
-
-                                            viewModel.deleteFromLoad(it)
-                                        }
-                                    },
-                                    content = {
-                                        Icon(
-                                            Icons.Filled.Delete,
-                                            "Удалить"
-                                        )
-                                    }
+                                        ),
+                                    textAlign = TextAlign.Center,
+                                    text = it.name,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 24.sp
                                 )
                             }
+
+                            IconButton(
+                                modifier = Modifier
+                                    .padding(0.dp, 0.dp, 28.dp, 0.dp)
+                                    .background(
+                                        Color.DarkGray.copy(alpha = 0.2f),
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
+                                    .size(32.dp),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        delete(it)
+
+                                        viewModel.deleteFromLoad(it)
+                                    }
+                                },
+                                content = {
+                                    Icon(
+                                        Icons.Filled.Delete,
+                                        "Удалить"
+                                    )
+                                }
+                            )
                         }
                     }
                 }
