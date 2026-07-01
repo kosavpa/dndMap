@@ -19,6 +19,10 @@ import okhttp3.internal.toImmutableList
 
 class UiViewModel : ViewModel() {
 
+    var isNeedHighlightMenu by mutableStateOf(true)
+
+    var backgroundIsViewed by mutableStateOf(true)
+
     var drawerViewModel = DrawerViewModel()
 
     val cellSizeRange: ClosedFloatingPointRange<Float>
