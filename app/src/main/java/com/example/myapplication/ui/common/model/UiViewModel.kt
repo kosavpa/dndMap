@@ -234,36 +234,24 @@ class UiViewModel : ViewModel() {
             createViewModel.imageName = value
         }
 
-    var isPickImage: Boolean
+    val isPickImage: Boolean
         get() {
             return createViewModel.isPickImage
         }
-        set(value) {
-            createViewModel.isPickImage = value
-        }
 
-    var isResolveImageSource: Boolean
+    val isResolveImageSource: Boolean
         get() {
             return createViewModel.isResolveImageSource
         }
-        set(value) {
-            createViewModel.isResolveImageSource = value
-        }
 
-    var isFromGallery: Boolean
+    val isFromGallery: Boolean
         get() {
             return createViewModel.isFromGallery
         }
-        set(value) {
-            createViewModel.isFromGallery = value
-        }
 
-    var isFromInternet: Boolean
+    val isFromInternet: Boolean
         get() {
             return createViewModel.isFromInternet
-        }
-        set(value) {
-            createViewModel.isFromInternet = value
         }
 
     fun toggleNeedResolveImageDialog() {

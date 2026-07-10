@@ -82,10 +82,6 @@ class CreateViewModel : ViewModel() {
     fun cancelResolveOrPickImage() {
         isResolveImageSource = false
 
-        isFromGallery = false
-
-        isFromInternet = false
-
         isPickImage = false
     }
 }

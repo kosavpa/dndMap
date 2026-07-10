@@ -64,9 +64,12 @@ fun MenuWindow(
 
                 closeDrawer.invoke()
             },
+            enabled = viewModel.selectedMapUri != null,
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
-                containerColor = Color.Transparent
+                containerColor = Color.Transparent,
+                disabledContentColor = Color.White.copy(alpha = 0.5f),
+                disabledContainerColor = Color.Transparent
             )
         ) {
             Text("Выбрать фишку", fontSize = 22.sp)
@@ -128,9 +131,12 @@ fun MenuWindow(
 
                 closeDrawer.invoke()
             },
+            enabled = viewModel.selectedMapUri != null,
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White,
-                containerColor = Color.Transparent
+                containerColor = Color.Transparent,
+                disabledContentColor = Color.White.copy(alpha = 0.5f),
+                disabledContainerColor = Color.Transparent
             )
         ) {
             Text("Включить сетку", fontSize = 22.sp)

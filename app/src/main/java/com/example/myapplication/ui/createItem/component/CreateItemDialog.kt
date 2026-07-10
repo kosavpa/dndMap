@@ -103,8 +103,8 @@ fun CreateItemDialog(
                     ) {
                         Canvas(
                             Modifier
-                                .size(100.dp)
                                 .clip(RoundedCornerShape(16.dp))
+                                .size(100.dp)
                                 .border(
                                     BorderStroke(4.dp, Color.Black),
                                     CircleShape
